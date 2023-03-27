@@ -2,13 +2,22 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faXmark,
+  faPlay,
+  faCircleChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
 
 import { makeMovieImagePath } from "@/utils";
 import { movieAPIs } from "@/api";
-import { IGetSimilarMoviesResult, IMovie } from "@/api/interfaceMovieApi";
+import {
+  IGetSimilarMoviesResult,
+  IMovie,
+  ISimilarMovie,
+} from "@/api/interfaceMovieApi";
 import MovieBox from "@/components/movieApp/MovieBox";
+import { useEffect, useState } from "react";
 
 const Overlay = styled(motion.div)`
   position: absolute;
@@ -131,6 +140,39 @@ const Items = styled.ul`
   padding: 0 4%;
 `;
 
+const MoreBox = styled.div`
+  position: relative;
+
+  width: 92%;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-bottom: 1px solid #404040;
+  background-image: linear-gradient(
+    0deg,
+    #181818 0,
+    hsla(0, 0%, 9%, 0.7) 20%,
+    hsla(0, 0%, 9%, 0.4) 30%,
+    transparent 50%
+  );
+
+  margin-top: -24px;
+  margin-left: 4%;
+`;
+const MoreIcon = styled.div<{ activeMore: boolean }>`
+  position: absolute;
+  top: 5px;
+
+  font-size: 30px;
+  color: #a8a8a8;
+
+  transform: ${(props) => (props.activeMore ? "rotate(180deg)" : "rotate(0)")};
+  cursor: pointer;
+`;
+
 interface IProps {
   movie: IMovie;
 }
@@ -146,6 +188,24 @@ const MovieDetailPopup = ({ movie }: IProps) => {
     ["movies", "similar"],
     () => movieAPIs.getSimilarMovies(movie.id)
   );
+
+  const [visibleData, setVisibleData] = useState(
+    similarData?.results.slice(0, 9)
+  );
+  const [activeMore, setActiveMore] = useState(false);
+
+  useEffect(() => {
+    setVisibleData(similarData?.results.slice(0, 9));
+  }, [similarData]);
+
+  // NOTE More버튼 클릭 시 모든 관련 영화 출력
+  const onClickMore = () => {
+    if (activeMore) setVisibleData(similarData?.results.slice(0, 9));
+    else {
+      setVisibleData(similarData?.results);
+    }
+    setActiveMore((prev) => !prev);
+  };
 
   return (
     <>
@@ -176,7 +236,7 @@ const MovieDetailPopup = ({ movie }: IProps) => {
         <ListWrap>
           <Title>비슷한 콘텐츠</Title>
           <Items>
-            {similarData?.results.map((item) => (
+            {visibleData?.map((item) => (
               // component type1 : 비슷한 컨텐츠 박스, type2 : 회차 정보
               <MovieBox key={item.id} data={item} />
               // TODO
@@ -186,6 +246,13 @@ const MovieDetailPopup = ({ movie }: IProps) => {
             ))}
           </Items>
         </ListWrap>
+        {similarData?.results.length > 8 ? (
+          <MoreBox>
+            <MoreIcon onClick={onClickMore} activeMore={activeMore}>
+              <FontAwesomeIcon icon={faCircleChevronDown} />
+            </MoreIcon>
+          </MoreBox>
+        ) : null}
       </MovieDetailBox>
     </>
   );
