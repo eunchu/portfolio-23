@@ -24,6 +24,8 @@ export interface ISimilarMovie {
   overview: string;
   poster_path: string;
   backdrop_path: string;
+  popularity: number;
+  release_date: string;
 }
 export interface IGetSimilarMoviesResult {
   page: number;

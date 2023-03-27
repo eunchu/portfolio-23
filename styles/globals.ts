@@ -11,7 +11,7 @@ const GlobalStyle: any = createGlobalStyle`
     width: 100%;
     height: 100%;
 
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'IBM Plex Sans KR','Noto Sans KR', sans-serif;
     font-size: 12px;
     font-weight: normal;
     line-height: 1.4;

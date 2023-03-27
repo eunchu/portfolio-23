@@ -100,14 +100,15 @@ const InfoWrap = styled.div`
   margin-bottom: 40px;
 `;
 const InfoTitle = styled.h2`
-  font-size: 1.6vw;
+  font-size: 18px;
 
   margin-bottom: 12px;
 `;
 const InfoOverview = styled.p`
-  font-size: 1.2vw;
+  font-size: 14px;
   font-weight: 300;
   line-height: 24px;
+  color: #bdbdbd;
 
   display: -webkit-box;
   -webkit-line-clamp: 3;

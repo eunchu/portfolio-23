@@ -222,7 +222,7 @@ export default function Home() {
   const clickedMovie =
     clickedMovieId &&
     data?.results.find((movie) => movie.id === +clickedMovieId);
-  // 디테일팝업 오픈 시 스크롤 막기
+  // 디테일팝업 오픈 시 바디스크롤 막기
   useEffect(() => {
     if (clickedMovie) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "auto";

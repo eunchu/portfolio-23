@@ -1,4 +1,4 @@
-## NETFLIX CLONE
+## MovieApp
 
 Project start
 
