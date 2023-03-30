@@ -1,0 +1,1 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[125],{9913:function(n,e,u){(window.__NEXT_P=window.__NEXT_P||[]).push(["/movieApp/search",function(){return u(440)}])},440:function(n,e,u){"use strict";u.r(e);var _=u(5893);u(7294);let c=()=>(0,_.jsx)("div",{children:"searcg"});e.default=c}},function(n){n.O(0,[774,888,179],function(){return n(n.s=9913)}),_N_E=n.O()}]);

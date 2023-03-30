@@ -239,10 +239,6 @@ const MovieDetailPopup = ({ movie }: IProps) => {
             {visibleData?.map((item) => (
               // component type1 : 비슷한 컨텐츠 박스, type2 : 회차 정보
               <MovieBox key={item.id} data={item} />
-              // TODO
-              // 9개 먼저 show
-              // item이 더 있을 경우, 화살표 아이콘 출력
-              // 아이콘 클릭 시 나머지 컨텐츠 출력
             ))}
           </Items>
         </ListWrap>

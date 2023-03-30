@@ -31,5 +31,8 @@
     "styled-components": "^5.3.8",
     "styled-reset": "^4.4.5",
     "typescript": "4.9.5"
-  }
+  },
+  "homepage": "https://github.com/eunchu/portfolio-23",
+  "predeploy": "yarn build",
+  "deploy": "gh-pages -d build"
 }
