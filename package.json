@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-deploy": "next build && next export"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
@@ -32,7 +33,5 @@
     "styled-reset": "^4.4.5",
     "typescript": "4.9.5"
   },
-  "homepage": "https://github.com/eunchu/portfolio-23",
-  "predeploy": "yarn build",
-  "deploy": "gh-pages -d build"
+  "homepage": "https://eunchu.github.io/portfolio-23"
 }

@@ -2,6 +2,9 @@ import Link from "next/link";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
+import { useRecoilValue } from "recoil";
+import { commonState } from "@/store";
+
 const Container = styled.div`
   height: 100vh;
 
@@ -63,6 +66,8 @@ const ProjectName = styled.div`
 `;
 
 const Home = () => {
+  const baseUrl = useRecoilValue(commonState);
+
   const boxVariants = {
     normal: {
       opacity: 0,
@@ -88,11 +93,11 @@ const Home = () => {
   const items = [
     {
       title: "Movie App",
-      link: "/movieApp",
+      link: `${baseUrl}/movieApp`,
     },
     {
       title: "Ing...",
-      link: "/",
+      link: baseUrl,
     },
   ];
 

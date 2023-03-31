@@ -242,7 +242,7 @@ const MovieDetailPopup = ({ movie }: IProps) => {
             ))}
           </Items>
         </ListWrap>
-        {similarData?.results.length > 8 ? (
+        {similarData && similarData.results.length > 8 ? (
           <MoreBox>
             <MoreIcon onClick={onClickMore} activeMore={activeMore}>
               <FontAwesomeIcon icon={faCircleChevronDown} />

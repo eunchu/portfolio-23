@@ -1,3 +1,4 @@
+import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
@@ -218,7 +219,9 @@ export default function Home() {
     router.push("/movieApp", `/movieApp/movies/${movieId}`, { shallow: true });
   };
   // Box outside click -> more detail popup close
-  const clickedMovieId = router.asPath.split("/movieApp/movies/")[1];
+  const clickedMovieId = router.asPath
+    .split("/movieApp/movies/")[1]
+    ?.slice(0, -1);
   const clickedMovie =
     clickedMovieId &&
     data?.results.find((movie) => movie.id === +clickedMovieId);
