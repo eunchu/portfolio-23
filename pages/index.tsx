@@ -93,11 +93,13 @@ const Home = () => {
   const items = [
     {
       title: "Movie App",
-      link: `${baseUrl}/movieApp`,
+      // link: `${baseUrl}/movieApp`,
+      link: "/movieApp",
     },
     {
       title: "Ing...",
-      link: baseUrl,
+      // link: baseUrl,
+      link: "/",
     },
   ];
 

@@ -1,4 +1,3 @@
-import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
