@@ -1,14 +1,13 @@
 import React from "react";
 
-import Header from "@/components/movieApp/Header";
+import Layout from "@/components/movieApp/Layout";
 import Home from "./home";
 
 const NetflixApp = () => {
   return (
-    <div>
-      <Header />
+    <Layout>
       <Home />
-    </div>
+    </Layout>
   );
 };
 
