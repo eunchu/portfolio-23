@@ -102,7 +102,7 @@ const Col = styled.div`
 `;
 
 const Header = () => {
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -142,8 +142,10 @@ const Header = () => {
   }
   const { register, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
-    console.log(data);
-    router.push(`/search?keyword=${data.keyword}`);
+    router.push({
+      pathname: `/movieApp/search/[keyword]`,
+      query: { keyword: data.keyword },
+    });
   };
 
   return (

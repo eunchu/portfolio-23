@@ -13,7 +13,7 @@ import {
 
 import { makeHourFormat, makeMovieImagePath } from "@/utils";
 import { movieAPIs } from "@/api";
-import { IGetSimilarMoviesResult, IMovie } from "@/api/interfaceMovieApi";
+import { IGetSimilarMoviesResult, IMovie } from "@/api/interface/movieApi";
 import MovieBox from "@/components/movieApp/MovieBox";
 
 const Overlay = styled(motion.div)`

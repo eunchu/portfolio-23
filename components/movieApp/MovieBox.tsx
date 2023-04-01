@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faCirclePlay } from "@fortawesome/free-solid-svg-icons";
-import { ISimilarMovie } from "@/api/interfaceMovieApi";
+import { ISimilarMovie } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 
 const Box = styled.div`

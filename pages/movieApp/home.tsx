@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 import { movieAPIs } from "@/api";
-import { IGetNowMoviesResult } from "@/api/interfaceMovieApi";
+import { IGetNowMoviesResult } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";

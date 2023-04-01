@@ -3,33 +3,30 @@ import {
   IGetMovie,
   IGetNowMoviesResult,
   IGetSimilarMoviesResult,
-} from "./interfaceMovieApi";
-
-const API_KEY = "d00a99ae2b58c552fc3c259e80fe36e2";
+} from "./interface/movieApi";
 
 interface IApiFactory {
   baseUrl: string;
+  fixedQuery: string;
 }
 
-export const moviesFactory = ({ baseUrl }: IApiFactory) => {
-  const commonUrl = `api_key=${API_KEY}&language=ko-KR`;
-
+export const moviesFactory = ({ baseUrl, fixedQuery }: IApiFactory) => {
   // NOTE [GET] 현재 상영작 리스트
   const getNowMovies = async () =>
     (await (
-      await axios.get(`${baseUrl}/now_playing?${commonUrl}&region=KR`)
+      await axios.get(`${baseUrl}/now_playing?${fixedQuery}&region=KR`)
     ).data) as IGetNowMoviesResult;
 
   // NOTE [GET] 관련 영화 리스트
   const getSimilarMovies = async (movieId: number) =>
     (await (
-      await axios.get(`${baseUrl}/${movieId}/similar?${commonUrl}`)
+      await axios.get(`${baseUrl}/${movieId}/similar?${fixedQuery}`)
     ).data) as IGetSimilarMoviesResult;
 
   // NOTE [GET] 영화 상세 정보
   const getMovie = async (movieId: number) =>
     (await (
-      await axios.get(`${baseUrl}/${movieId}?${commonUrl}`)
+      await axios.get(`${baseUrl}/${movieId}?${fixedQuery}`)
     ).data) as IGetMovie;
 
   return { getNowMovies, getSimilarMovies, getMovie };
