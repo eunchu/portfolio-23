@@ -1,19 +1,20 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import { useQuery } from "react-query";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faXmark,
   faPlay,
   faCircleChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { useQuery } from "react-query";
 
 import { makeHourFormat, makeMovieImagePath } from "@/utils";
 import { movieAPIs } from "@/api";
 import { IGetSimilarMoviesResult, IMovie } from "@/api/interfaceMovieApi";
 import MovieBox from "@/components/movieApp/MovieBox";
-import { useEffect, useState } from "react";
 
 const Overlay = styled(motion.div)`
   position: absolute;
