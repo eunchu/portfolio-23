@@ -33,3 +33,10 @@ export interface IGetSimilarMoviesResult {
   total_pages: number;
   total_results: number;
 }
+// 영화 상세
+export interface IGetMovie {
+  id: number;
+  genres: { id: number; name: string }[];
+  release_date: string;
+  runtime: number;
+}

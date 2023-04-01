@@ -9,13 +9,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
 
-import { makeMovieImagePath } from "@/utils";
+import { makeHourFormat, makeMovieImagePath } from "@/utils";
 import { movieAPIs } from "@/api";
-import {
-  IGetSimilarMoviesResult,
-  IMovie,
-  ISimilarMovie,
-} from "@/api/interfaceMovieApi";
+import { IGetSimilarMoviesResult, IMovie } from "@/api/interfaceMovieApi";
 import MovieBox from "@/components/movieApp/MovieBox";
 import { useEffect, useState } from "react";
 
@@ -48,7 +44,7 @@ const MovieDetailBox = styled(motion.div)`
 
   margin: 0 auto;
   z-index: 99;
-  overflow: scroll;
+  overflow: auto;
 `;
 const CloseBtn = styled.div`
   position: absolute;
@@ -126,6 +122,26 @@ const InfoOverview = styled.p`
   overflow: hidden;
   word-break: break-word;
 `;
+const Details = styled.div`
+  display: flex;
+  align-items: center;
+
+  font-size: 14px;
+
+  margin-top: 20px;
+`;
+const Release = styled.p``;
+const RunTime = styled.p`
+  margin-left: 10px;
+`;
+const Keywords = styled.ul`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 8px;
+`;
+const Keyword = styled.li``;
 
 const ListWrap = styled.div``;
 const Title = styled.h2`
@@ -189,6 +205,12 @@ const MovieDetailPopup = ({ movie }: IProps) => {
     () => movieAPIs.getSimilarMovies(movie.id)
   );
 
+  // NOTE GET 영화 상세 정보
+  const { data: detailData } = useQuery(["movie", "detail"], () =>
+    movieAPIs.getMovie(movie.id)
+  );
+  console.log(detailData);
+
   const [visibleData, setVisibleData] = useState(
     similarData?.results.slice(0, 9)
   );
@@ -232,16 +254,27 @@ const MovieDetailPopup = ({ movie }: IProps) => {
         <InfoWrap>
           <InfoTitle>{movie.title}</InfoTitle>
           <InfoOverview>{movie.overview}</InfoOverview>
-        </InfoWrap>
-        <ListWrap>
-          <Title>비슷한 콘텐츠</Title>
-          <Items>
-            {visibleData?.map((item) => (
-              // component type1 : 비슷한 컨텐츠 박스, type2 : 회차 정보
-              <MovieBox key={item.id} data={item} />
+          <Details>
+            <Release>{detailData?.release_date.slice(0, 4)}</Release>
+            <RunTime>{makeHourFormat(detailData?.runtime || 0)}</RunTime>
+          </Details>
+          <Keywords>
+            {detailData?.genres.map((item) => (
+              <Keyword key={item.id}>#{item.name}</Keyword>
             ))}
-          </Items>
-        </ListWrap>
+          </Keywords>
+        </InfoWrap>
+        {similarData?.results.length ? (
+          <ListWrap>
+            <Title>비슷한 콘텐츠</Title>
+            <Items>
+              {visibleData?.map((item) => (
+                // component type1 : 비슷한 컨텐츠 박스, type2 : 회차 정보
+                <MovieBox key={item.id} data={item} />
+              ))}
+            </Items>
+          </ListWrap>
+        ) : null}
         {similarData && similarData.results.length > 8 ? (
           <MoreBox>
             <MoreIcon onClick={onClickMore} activeMore={activeMore}>
