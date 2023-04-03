@@ -70,7 +70,7 @@ const PopIcon = styled.div`
   color: white;
 `;
 const Release = styled.p`
-  font-size: 16px;
+  font-size: 14px;
 `;
 const Title = styled.h2`
   font-size: 16px;
@@ -82,6 +82,9 @@ const Title = styled.h2`
   white-space: nowrap;
 `;
 const Overview = styled.p`
+  height: 0;
+  flex-grow: 1;
+
   font-size: 12px;
   font-weight: 300;
   line-height: 20px;

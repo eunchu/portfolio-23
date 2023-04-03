@@ -42,17 +42,18 @@ const BannerContents = styled.div`
   left: 4%;
 `;
 const Title = styled.h2`
-  font-size: 1.6vw;
-  font-weight: 300;
+  font-size: 20px;
+  font-weight: 500;
 
   margin-bottom: 10px;
 `;
-const Overview = styled.p`
+const Overview = styled.p<IMediaStyle>`
   width: 70%;
 
-  font-size: 1.2vw;
-  font-weight: 100;
-  line-height: 24px;
+  font-size: ${(props) => (props.isMobile ? "12px" : "16px")};
+  font-weight: 300;
+  color: #bdbdbd;
+  line-height: ${(props) => (props.isMobile ? "20px" : "24px")};
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -150,7 +151,7 @@ const Left = styled(motion.div)`
 const Right = styled.div``;
 
 const SubTitle = styled.div<IMediaStyle>`
-  font-size: ${(props) => (props.isMobile ? "12px" : "1.4vw")};
+  font-size: ${(props) => (props.isMobile ? "14px" : "1.4vw")};
   margin-bottom: 8px;
 `;
 const Loader = styled.div`
@@ -162,7 +163,7 @@ const Loader = styled.div`
 `;
 
 export default function Home() {
-  const isMobile = useIsMobile();
+  const isMobileSize = useIsMobile();
 
   // NOTE GET 배너 영화 정보
   const { data, isLoading } = useQuery<IGetNowMoviesResult>(
@@ -171,7 +172,7 @@ export default function Home() {
   );
 
   // NOTE [최신 개봉 영화] Slider
-  const offset = isMobile ? 3 : 6;
+  const offset = isMobileSize ? 3 : 6;
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
@@ -244,11 +245,13 @@ export default function Home() {
           >
             <BannerContents>
               <Title>{data?.results[BANNER_SHOW_IDX].title}</Title>
-              <Overview>{data?.results[BANNER_SHOW_IDX].overview}</Overview>
+              <Overview isMobile={isMobileSize}>
+                {data?.results[BANNER_SHOW_IDX].overview}
+              </Overview>
             </BannerContents>
           </Banner>
           <Slider>
-            <SubTitle isMobile={isMobile}>최신 영화</SubTitle>
+            <SubTitle isMobile={isMobileSize}>최신 영화</SubTitle>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 key={index}
@@ -258,7 +261,7 @@ export default function Home() {
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
                 whileHover="hover"
-                isMobile={isMobile}
+                isMobile={isMobileSize}
               >
                 {index !== 0 && (
                   <Left variants={showVariants} onClick={decreaseIndex}>

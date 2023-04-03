@@ -14,7 +14,12 @@ import {
 import { makeHourFormat, makeMovieImagePath } from "@/utils";
 import { movieAPIs } from "@/api";
 import { IGetSimilarMoviesResult, IMovie } from "@/api/interface/movieApi";
+import { useIsMobile } from "@/hooks";
 import MovieBox from "@/components/movieApp/MovieBox";
+
+interface IMediaStyle {
+  isMobile: boolean;
+}
 
 const Overlay = styled(motion.div)`
   position: absolute;
@@ -89,7 +94,7 @@ const PlayButton = styled.div`
     background-color: #e6e6e6;
   }
   span {
-    font-size: 1.2vw;
+    font-size: 12px;
     color: #000000;
   }
 `;
@@ -149,10 +154,13 @@ const Title = styled.h2`
   font-size: 1.8vw;
   margin: 10px 0 14px 4%;
 `;
-const Items = styled.ul`
+const Items = styled.ul<IMediaStyle>`
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(3, minmax(100px, 1fr));
+  grid-template-columns: ${(props) =>
+    props.isMobile
+      ? "repeat(2, minmax(100px, 1fr))"
+      : "repeat(3, minmax(100px, 1fr))"};
 
   padding: 0 4%;
 `;
@@ -195,6 +203,7 @@ interface IProps {
 }
 const MovieDetailPopup = ({ movie }: IProps) => {
   const router = useRouter();
+  const isMobileSize = useIsMobile();
 
   // NOTE 팝업닫기
   const onClosePopup = () =>
@@ -210,20 +219,20 @@ const MovieDetailPopup = ({ movie }: IProps) => {
   const { data: detailData } = useQuery(["movie", "detail"], () =>
     movieAPIs.getMovie(movie.id)
   );
-  console.log(detailData);
 
+  const displayNum = isMobileSize ? 6 : 9;
   const [visibleData, setVisibleData] = useState(
-    similarData?.results.slice(0, 9)
+    similarData?.results.slice(0, displayNum)
   );
   const [activeMore, setActiveMore] = useState(false);
 
   useEffect(() => {
-    setVisibleData(similarData?.results.slice(0, 9));
-  }, [similarData]);
+    setVisibleData(similarData?.results.slice(0, displayNum));
+  }, [similarData, displayNum]);
 
   // NOTE More버튼 클릭 시 모든 관련 영화 출력
   const onClickMore = () => {
-    if (activeMore) setVisibleData(similarData?.results.slice(0, 9));
+    if (activeMore) setVisibleData(similarData?.results.slice(0, displayNum));
     else {
       setVisibleData(similarData?.results);
     }
@@ -268,7 +277,7 @@ const MovieDetailPopup = ({ movie }: IProps) => {
         {similarData?.results.length ? (
           <ListWrap>
             <Title>비슷한 콘텐츠</Title>
-            <Items>
+            <Items isMobile={isMobileSize}>
               {visibleData?.map((item) => (
                 // component type1 : 비슷한 컨텐츠 박스, type2 : 회차 정보
                 <MovieBox key={item.id} data={item} />
