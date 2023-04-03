@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -11,6 +12,7 @@ import { IGetNowMoviesResult } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
+import Box from "@/components/movieApp/Box";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -80,62 +82,6 @@ const Row = styled(motion.div)<IMediaStyle>`
       ? "repeat(3, minmax(100px, 1fr))"
       : "repeat(6, minmax(100px, 1fr))"};
 `;
-const BoxWrap = styled(motion.div)<{ bgphoto: string }>`
-  position: relative;
-
-  height: 200px;
-  min-height: 100px;
-  max-height: 300px;
-
-  padding-top: 150%;
-
-  background-image: url(${(props) => props.bgphoto});
-  background-size: cover;
-  background-position: center center;
-  border-radius: 4px;
-
-  cursor: pointer;
-  &:first-child {
-    transform-origin: center left;
-  }
-  &:last-child {
-    transform-origin: center right;
-  }
-`;
-const Box = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  height: 100%;
-  width: 100%;
-`;
-const Info = styled(motion.div)`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -36px;
-
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  font-size: 12px;
-  background-color: #313131;
-  border-radius: 0 0 4px 4px;
-
-  padding: 10px;
-  opacity: 0;
-  h3 {
-    width: 80%;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-`;
 const Left = styled(motion.div)`
   position: absolute;
   top: calc(50% - 12px);
@@ -194,19 +140,6 @@ export default function Home() {
     visible: { x: 0 },
     exit: { x: typeof window !== "undefined" ? -window.outerWidth + 10 : 0 },
   };
-  const boxVariants = {
-    normal: { scale: 1 },
-    hover: {
-      scale: 1.3,
-      y: -22,
-      zIndex: 99,
-      transition: {
-        delay: BOX_EFFECT_DELAY,
-        duration: 0.2,
-        type: "tween",
-      },
-    },
-  };
   const showVariants = {
     hover: {
       opacity: 1,
@@ -250,6 +183,7 @@ export default function Home() {
               </Overview>
             </BannerContents>
           </Banner>
+
           <Slider>
             <SubTitle isMobile={isMobileSize}>최신 영화</SubTitle>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
@@ -272,31 +206,19 @@ export default function Home() {
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
-                    <BoxWrap
+                    <Box
                       key={movie.id}
-                      layoutId={movie.id + ""}
-                      variants={boxVariants}
-                      initial="normal"
-                      whileHover="hover"
-                      transition={{ type: "tween" }}
-                      bgphoto={makeMovieImagePath(movie.poster_path, "w500")}
-                      onClick={() => onBoxClicked(movie.id)}
-                    >
-                      <Box>
-                        <Info variants={showVariants}>
-                          <h3>{movie.title}</h3>
-                          <div>{movie.vote_average}</div>
-                        </Info>
-                      </Box>
-                    </BoxWrap>
+                      movie={movie}
+                      showVariants={showVariants}
+                    />
                   ))}
               </Row>
             </AnimatePresence>
           </Slider>
+
           <AnimatePresence>
             {clickedMovie ? <MovieDetailPopup movie={clickedMovie} /> : null}
           </AnimatePresence>
-          <div style={{ height: "400px" }}></div>
         </>
       )}
     </Main>
