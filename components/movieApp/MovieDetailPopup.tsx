@@ -205,8 +205,9 @@ const MoreIcon = styled.div<{ activeMore: boolean }>`
 
 interface IProps {
   movie: IMovie | ISearchedResult;
+  path: string;
 }
-const MovieDetailPopup = ({ movie }: IProps) => {
+const MovieDetailPopup = ({ movie, path }: IProps) => {
   const router = useRouter();
   const isMobileSize = useIsMobile();
 
@@ -214,9 +215,11 @@ const MovieDetailPopup = ({ movie }: IProps) => {
 
   // NOTE 팝업닫기
   const onClosePopup = () => {
-    router.push(router.asPath, undefined, { shallow: true });
+    router.push(path, undefined, { shallow: true });
     setClickedId(null);
   };
+
+  console.log("?", router);
 
   // TODO 클릭한 아이디가 영화가 아니면 시리즈로 검색해야함
 

@@ -206,7 +206,9 @@ export default function Home() {
           </Slider>
 
           <AnimatePresence>
-            {clickedMovie ? <MovieDetailPopup movie={clickedMovie} /> : null}
+            {clickedMovie ? (
+              <MovieDetailPopup movie={clickedMovie} path="/movieApp" />
+            ) : null}
           </AnimatePresence>
         </>
       )}

@@ -150,8 +150,6 @@ const Header = () => {
     });
   };
 
-  console.log(router);
-
   return (
     <Nav variants={navVariants} initial={"top"} animate={navAnimation}>
       <Col>

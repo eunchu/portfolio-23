@@ -142,7 +142,9 @@ const Search = () => {
         ) : null}
       </Container>
       <AnimatePresence>
-        {clickedMovie ? <MovieDetailPopup movie={clickedMovie} /> : null}
+        {clickedMovie ? (
+          <MovieDetailPopup movie={clickedMovie} path={query.text + ""} />
+        ) : null}
       </AnimatePresence>
     </Layout>
   );
