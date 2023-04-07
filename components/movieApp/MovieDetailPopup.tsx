@@ -19,6 +19,7 @@ import { useIsMobile } from "@/hooks";
 import MovieBox from "@/components/movieApp/MovieBox";
 import { commonAtom } from "@/store";
 import { ISearchedResult } from "@/api/interface/searchApi";
+import ButtonIcon from "../atoms/ButtonIcon";
 
 interface IMediaStyle {
   isMobile: boolean;
@@ -83,30 +84,6 @@ const PlayButton = styled.div`
   position: absolute;
   bottom: 8%;
   left: 4%;
-
-  display: flex;
-  align-items: center;
-
-  max-height: 42px;
-  min-height: 32px;
-
-  background-color: white;
-  border-radius: 4px;
-
-  padding: 0 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: #e6e6e6;
-  }
-  span {
-    font-size: 12px;
-    color: #000000;
-  }
-`;
-const PlayButtonIcon = styled.div`
-  color: #000000;
-  font-size: 14px;
-  margin-right: 8px;
 `;
 
 const InfoWrap = styled.div`
@@ -219,8 +196,6 @@ const MovieDetailPopup = ({ movie, path }: IProps) => {
     setClickedId(null);
   };
 
-  console.log("?", router);
-
   // TODO 클릭한 아이디가 영화가 아니면 시리즈로 검색해야함
 
   // NOTE GET 관련 영화 리스트
@@ -271,10 +246,10 @@ const MovieDetailPopup = ({ movie, path }: IProps) => {
           }
         >
           <PlayButton>
-            <PlayButtonIcon>
-              <FontAwesomeIcon icon={faPlay} color="#000000" />
-            </PlayButtonIcon>
-            <span>재생</span>
+            <ButtonIcon
+              text="재생"
+              icon={<FontAwesomeIcon icon={faPlay} color="#000000" />}
+            />
           </PlayButton>
         </PreviewPhoto>
         <InfoWrap>

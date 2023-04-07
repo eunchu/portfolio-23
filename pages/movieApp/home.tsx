@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRecoilValue } from "recoil";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faPlay } from "@fortawesome/free-solid-svg-icons";
 
 import { movieAPIs } from "@/api";
 import { IGetNowMoviesResult } from "@/api/interface/movieApi";
@@ -14,6 +14,7 @@ import { useIsMobile } from "@/hooks";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
 import Box from "@/components/movieApp/Box";
 import { commonAtom } from "@/store";
+import ButtonIcon from "@/components/atoms/ButtonIcon";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -45,10 +46,25 @@ const BannerContents = styled.div`
   left: 4%;
 `;
 const Title = styled.h2`
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 500;
 
   margin-bottom: 10px;
+`;
+const DetailWrap = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const Average = styled.p`
+  color: ${(props) => props.theme.color.point};
+  font-size: 14px;
+  span {
+    color: white;
+  }
+`;
+const Release = styled.p`
+  font-size: 14px;
+  margin-left: 14px;
 `;
 const Overview = styled.p<IMediaStyle>`
   width: 70%;
@@ -63,6 +79,8 @@ const Overview = styled.p<IMediaStyle>`
   text-overflow: ellipsis;
   overflow: hidden;
   word-break: break-word;
+
+  margin: 10px 0;
 `;
 
 const Slider = styled.div`
@@ -170,10 +188,23 @@ export default function Home() {
             )}
           >
             <BannerContents>
-              <Title>{data?.results[BANNER_SHOW_IDX].title}</Title>
+              <Title>{data?.results[BANNER_SHOW_IDX].original_title}</Title>
+              <DetailWrap>
+                <Average>
+                  {data?.results[BANNER_SHOW_IDX].vote_average.toFixed(1)}{" "}
+                  <span>Point</span>
+                </Average>
+                <Release>
+                  {data?.results[BANNER_SHOW_IDX].release_date.slice(0, 4)}
+                </Release>
+              </DetailWrap>
               <Overview isMobile={isMobileSize}>
                 {data?.results[BANNER_SHOW_IDX].overview}
               </Overview>
+              <ButtonIcon
+                text="재생"
+                icon={<FontAwesomeIcon icon={faPlay} color="#000000" />}
+              />
             </BannerContents>
           </Banner>
 
@@ -204,7 +235,6 @@ export default function Home() {
               </Row>
             </AnimatePresence>
           </Slider>
-
           <AnimatePresence>
             {clickedMovie ? (
               <MovieDetailPopup movie={clickedMovie} path="/movieApp" />

@@ -63,7 +63,7 @@ const Popularity = styled.p`
   align-items: center;
 
   font-size: 14px;
-  color: #deb83e;
+  color: ${(props) => props.theme.color.point};
 `;
 const PopIcon = styled.div`
   margin-right: 6px;

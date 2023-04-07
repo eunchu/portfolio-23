@@ -101,7 +101,7 @@ const Search = () => {
     <Layout>
       <Container>
         <Title>
-          <span>{'"' + query.text + '"'}</span> 검색 결과가{" "}
+          <span>{'"' + query.text + '"'}</span> 검색 결과가 총{" "}
           {seachedResults?.total_results}개 있습니다
         </Title>
         {movies.length ? (
