@@ -14,7 +14,7 @@ import Layout from "@/components/movieApp/Layout";
 import Box from "@/components/movieApp/Box";
 import { commonAtom } from "@/store";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const Container = styled.div`
   margin-top: 110px;
@@ -58,6 +58,8 @@ const Items = styled.ul`
 const Search = () => {
   const { query } = useRouter();
 
+  const [movieListHover, setMovieListHover] = useState<boolean>(false);
+  const [seriesListHover, setSeriesistHover] = useState<boolean>(false);
   const clickedId = useRecoilValue(commonAtom);
 
   // NOTE GET 영화 검색 리스트
@@ -103,34 +105,40 @@ const Search = () => {
           {seachedResults?.total_results}개 있습니다
         </Title>
         {movies.length ? (
-          <>
+          <div
+            onMouseEnter={() => setMovieListHover(true)}
+            onMouseLeave={() => setMovieListHover(false)}
+          >
             <TypeTitleWrap>
               <TypeTitle>
                 영화<Total>{movies.length}개</Total>
               </TypeTitle>
-              <TotalLink>전체보기</TotalLink>
+              {movieListHover && <TotalLink>전체보기</TotalLink>}
             </TypeTitleWrap>
             <Items>
               {movies.slice(0, 6).map((item: ISearchedResult) => (
                 <Box key={item.id} movie={item} />
               ))}
             </Items>
-          </>
+          </div>
         ) : null}
         {series.length ? (
-          <>
+          <div
+            onMouseEnter={() => setSeriesistHover(true)}
+            onMouseLeave={() => setSeriesistHover(false)}
+          >
             <TypeTitleWrap>
               <TypeTitle>
                 TV프로그램<Total>{series.length}개</Total>
               </TypeTitle>
-              <TotalLink>전체보기</TotalLink>
+              {seriesListHover && <TotalLink>전체보기</TotalLink>}
             </TypeTitleWrap>
             <Items>
               {series.slice(0, 6).map((item: ISearchedResult) => (
                 <Box key={item.id} movie={item} />
               ))}
             </Items>
-          </>
+          </div>
         ) : null}
       </Container>
       <AnimatePresence>
