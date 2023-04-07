@@ -6,6 +6,7 @@ import { useSetRecoilState } from "recoil";
 import { IMovie } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { commonAtom } from "@/store";
+import { ISearchedResult } from "@/api/interface/searchApi";
 
 const ItemWrap = styled(motion.div)<{ bgphoto: string | null }>`
   position: relative;
@@ -66,7 +67,7 @@ const Info = styled(motion.div)`
 `;
 
 interface IBoxProps {
-  movie: IMovie;
+  movie: IMovie | ISearchedResult;
 }
 const Box = ({ movie }: IBoxProps) => {
   const router = useRouter();
@@ -97,7 +98,7 @@ const Box = ({ movie }: IBoxProps) => {
   // NOTE 박스 클릭 시 팝업 오픈
   const onBoxClicked = (movieId: number) => {
     setClickedId(movieId);
-    router.push(router.asPath, `${router.asPath}movies/${movieId}`, {
+    router.push(router.asPath, `${router.asPath}?movies/${movieId}`, {
       shallow: true,
     });
   };
@@ -120,7 +121,7 @@ const Box = ({ movie }: IBoxProps) => {
       >
         <Item>
           <Info variants={showVariants}>
-            <h3>{movie.title}</h3>
+            <h3>{movie.title || movie.name}</h3>
             <div>{movie.vote_average.toFixed(1)}</div>
           </Info>
         </Item>

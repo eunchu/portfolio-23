@@ -18,6 +18,7 @@ import { IGetSimilarMoviesResult, IMovie } from "@/api/interface/movieApi";
 import { useIsMobile } from "@/hooks";
 import MovieBox from "@/components/movieApp/MovieBox";
 import { commonAtom } from "@/store";
+import { ISearchedResult } from "@/api/interface/searchApi";
 
 interface IMediaStyle {
   isMobile: boolean;
@@ -27,6 +28,8 @@ const Overlay = styled(motion.div)`
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
 
   width: 100%;
   height: 100%;
@@ -121,7 +124,7 @@ const InfoOverview = styled.p`
   font-size: 14px;
   font-weight: 300;
   line-height: 24px;
-  color: #bdbdbd;
+  color: ${(props) => props.theme.color.textSub};
 
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -153,7 +156,7 @@ const Keyword = styled.li``;
 
 const ListWrap = styled.div``;
 const Title = styled.h2`
-  font-size: 1.8vw;
+  font-size: 18px;
   margin: 10px 0 14px 4%;
 `;
 const Items = styled.ul<IMediaStyle>`
@@ -201,7 +204,7 @@ const MoreIcon = styled.div<{ activeMore: boolean }>`
 `;
 
 interface IProps {
-  movie: IMovie;
+  movie: IMovie | ISearchedResult;
 }
 const MovieDetailPopup = ({ movie }: IProps) => {
   const router = useRouter();
@@ -211,9 +214,11 @@ const MovieDetailPopup = ({ movie }: IProps) => {
 
   // NOTE 팝업닫기
   const onClosePopup = () => {
-    router.push("/movieApp", undefined, { shallow: true });
+    router.push(router.asPath, undefined, { shallow: true });
     setClickedId(null);
   };
+
+  // TODO 클릭한 아이디가 영화가 아니면 시리즈로 검색해야함
 
   // NOTE GET 관련 영화 리스트
   const { data: similarData } = useQuery<IGetSimilarMoviesResult>(

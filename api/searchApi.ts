@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ISearchedMovies } from "./interface/searchApi";
+import { ISearchedMovies, ISearchedResults } from "./interface/searchApi";
 
 interface IApiFactory {
   baseUrl: string;
@@ -15,5 +15,13 @@ export const searchFactory = ({ baseUrl, fixedQuery }: IApiFactory) => {
       )
     ).data) as ISearchedMovies;
 
-  return { getSearchedMovies };
+  // NOTE [GET] 영화/시리즈 통합 검색
+  const getSearchedResults = async (searchWord: string) =>
+    (await (
+      await axios.get(
+        `${baseUrl}/multi?${fixedQuery}&query=${encodeURIComponent(searchWord)}`
+      )
+    ).data) as ISearchedResults;
+
+  return { getSearchedMovies, getSearchedResults };
 };

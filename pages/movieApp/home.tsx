@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -56,7 +55,7 @@ const Overview = styled.p<IMediaStyle>`
 
   font-size: ${(props) => (props.isMobile ? "12px" : "16px")};
   font-weight: 300;
-  color: #bdbdbd;
+  color: ${(props) => props.theme.color.textSub};
   line-height: ${(props) => (props.isMobile ? "20px" : "24px")};
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -99,7 +98,7 @@ const Left = styled(motion.div)`
 const Right = styled.div``;
 
 const SubTitle = styled.div<IMediaStyle>`
-  font-size: ${(props) => (props.isMobile ? "14px" : "1.4vw")};
+  font-size: 16px;
   margin-bottom: 8px;
 `;
 const Loader = styled.div`
@@ -148,9 +147,7 @@ export default function Home() {
       transition: { delay: BOX_EFFECT_DELAY, duration: 0.2, type: "tween" },
     },
   };
-  // Box click -> more detail popup open
-  // const router = useRouter();
-  // Box outside click -> more detail popup close
+
   const clickedId = useRecoilValue(commonAtom);
   const clickedMovie =
     clickedId && data?.results.find((movie) => movie.id === +clickedId);

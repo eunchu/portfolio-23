@@ -4,6 +4,7 @@ export interface IMovie {
   backdrop_path: string | null;
   poster_path: string | null;
   title: string;
+  name?: string;
   overview: string;
   vote_average: number;
 }

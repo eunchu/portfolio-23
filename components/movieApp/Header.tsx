@@ -42,7 +42,7 @@ const Item = styled.li`
   align-items: end;
   justify-content: center;
 
-  color: ${(props) => props.theme.color.white.darker};
+  color: #e5e5e5;
   font-size: 12px;
 
   transition: color 0.3s ease-in-out;
@@ -50,7 +50,7 @@ const Item = styled.li`
   margin-right: 20px;
   cursor: pointer;
   &:hover {
-    color: ${(props) => props.theme.color.white.lighter};
+    color: white;
   }
 `;
 const Line = styled(motion.span)`
@@ -84,7 +84,7 @@ const Input = styled(motion.input)`
   transform-origin: right center;
 
   background-color: #1a1a1ad9;
-  border: 1px solid ${(props) => props.theme.color.white.lighter};
+  border: 1px solid white;
   font-size: 12px;
   font-weight: 500;
   color: white;
