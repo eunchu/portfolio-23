@@ -1,0 +1,1 @@
+export { commonAtom } from "./commonAtom";

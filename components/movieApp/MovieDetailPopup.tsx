@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { useQuery } from "react-query";
+import { useSetRecoilState } from "recoil";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,6 +17,7 @@ import { movieAPIs } from "@/api";
 import { IGetSimilarMoviesResult, IMovie } from "@/api/interface/movieApi";
 import { useIsMobile } from "@/hooks";
 import MovieBox from "@/components/movieApp/MovieBox";
+import { commonAtom } from "@/store";
 
 interface IMediaStyle {
   isMobile: boolean;
@@ -62,7 +64,7 @@ const CloseBtn = styled.div`
   cursor: pointer;
   z-index: 2;
 `;
-const PreviewPhoto = styled.div<{ bgphoto: string }>`
+const PreviewPhoto = styled.div<{ bgphoto: string | null }>`
   position: relative;
 
   width: 100%;
@@ -205,9 +207,13 @@ const MovieDetailPopup = ({ movie }: IProps) => {
   const router = useRouter();
   const isMobileSize = useIsMobile();
 
+  const setClickedId = useSetRecoilState(commonAtom);
+
   // NOTE 팝업닫기
-  const onClosePopup = () =>
+  const onClosePopup = () => {
     router.push("/movieApp", undefined, { shallow: true });
+    setClickedId(null);
+  };
 
   // NOTE GET 관련 영화 리스트
   const { data: similarData } = useQuery<IGetSimilarMoviesResult>(
@@ -252,7 +258,9 @@ const MovieDetailPopup = ({ movie }: IProps) => {
         </CloseBtn>
         <PreviewPhoto
           className="image"
-          bgphoto={makeMovieImagePath(movie.backdrop_path)}
+          bgphoto={
+            movie.backdrop_path ? makeMovieImagePath(movie.backdrop_path) : null
+          }
         >
           <PlayButton>
             <PlayButtonIcon>

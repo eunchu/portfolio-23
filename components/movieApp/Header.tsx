@@ -24,6 +24,7 @@ const Logo = styled.h1`
   font-weight: 900;
 
   margin-right: 20px;
+  cursor: pointer;
   div {
     display: block;
     letter-spacing: 11px;
@@ -144,21 +145,24 @@ const Header = () => {
   const onValid = (data: IForm) => {
     router.push({
       pathname: `/movieApp/search/[keyword]`,
+      // pathname: `/movieApp/search/${data.keyword}`,
       query: { keyword: data.keyword },
     });
   };
 
+  console.log(router);
+
   return (
     <Nav variants={navVariants} initial={"top"} animate={navAnimation}>
       <Col>
-        <Logo>
+        <Logo onClick={() => router.push("/movieApp")}>
           MOVIE
           <br />
           <div>APP</div>
         </Logo>
         <Items>
           <Item>
-            <Link href="/">Home</Link>
+            <Link href="/movieApp">Home</Link>
             {router?.pathname === "/" && <Line layoutId="line" />}
           </Item>
           <Item>

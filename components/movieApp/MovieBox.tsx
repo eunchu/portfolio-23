@@ -27,7 +27,7 @@ const Wrap = styled.div`
   width: 100%;
   height: 100%;
 `;
-const Poster = styled.div<{ bgphoto: string }>`
+const Poster = styled.div<{ bgphoto: string | null }>`
   position: relative;
 
   width: 100%;
@@ -120,7 +120,13 @@ const MovieBox = ({ data }: IMovieBoxProps) => {
       onMouseLeave={() => setBoxHover(false)}
     >
       <Wrap>
-        <Poster bgphoto={makeMovieImagePath(data.backdrop_path, "w500")}>
+        <Poster
+          bgphoto={
+            data.backdrop_path
+              ? makeMovieImagePath(data.backdrop_path, "w500")
+              : null
+          }
+        >
           <PlayIcon
             variants={boxVariants}
             animate={boxhover ? "hover" : "initial"}

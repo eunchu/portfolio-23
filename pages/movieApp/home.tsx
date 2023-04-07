@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
+import { useRecoilValue } from "recoil";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +14,7 @@ import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
 import Box from "@/components/movieApp/Box";
+import { commonAtom } from "@/store";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -147,17 +149,11 @@ export default function Home() {
     },
   };
   // Box click -> more detail popup open
-  const router = useRouter();
-  const onBoxClicked = (movieId: number) => {
-    router.push("/movieApp", `/movieApp/movies/${movieId}`, { shallow: true });
-  };
+  // const router = useRouter();
   // Box outside click -> more detail popup close
-  const clickedMovieId = router.asPath
-    .split("/movieApp/movies/")[1]
-    ?.slice(0, -1);
+  const clickedId = useRecoilValue(commonAtom);
   const clickedMovie =
-    clickedMovieId &&
-    data?.results.find((movie) => movie.id === +clickedMovieId);
+    clickedId && data?.results.find((movie) => movie.id === +clickedId);
   // 디테일팝업 오픈 시 바디스크롤 막기
   useEffect(() => {
     if (clickedMovie) document.body.style.overflow = "hidden";
@@ -206,11 +202,7 @@ export default function Home() {
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
-                    <Box
-                      key={movie.id}
-                      movie={movie}
-                      showVariants={showVariants}
-                    />
+                    <Box key={movie.id} movie={movie} />
                   ))}
               </Row>
             </AnimatePresence>

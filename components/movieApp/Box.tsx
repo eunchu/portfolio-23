@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
 
 import { IMovie } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
+import { commonAtom } from "@/store";
 
-const ItemWrap = styled(motion.div)<{ bgphoto: string }>`
+const ItemWrap = styled(motion.div)<{ bgphoto: string | null }>`
   position: relative;
 
   height: 200px;
@@ -15,6 +17,7 @@ const ItemWrap = styled(motion.div)<{ bgphoto: string }>`
   padding-top: 150%;
 
   background-image: url(${(props) => props.bgphoto});
+  background-color: ${(props) => !props.bgphoto && "#353535"};
   background-size: cover;
   background-position: center center;
   border-radius: 4px;
@@ -64,10 +67,11 @@ const Info = styled(motion.div)`
 
 interface IBoxProps {
   movie: IMovie;
-  showVariants?: {};
 }
-const Box = ({ movie, showVariants }: IBoxProps) => {
+const Box = ({ movie }: IBoxProps) => {
   const router = useRouter();
+
+  const setClickedId = useSetRecoilState(commonAtom);
 
   const BOX_EFFECT_DELAY = 0.7;
   const boxVariants = {
@@ -83,30 +87,45 @@ const Box = ({ movie, showVariants }: IBoxProps) => {
       },
     },
   };
+  const showVariants = {
+    hover: {
+      opacity: 1,
+      transition: { delay: BOX_EFFECT_DELAY, duration: 0.2, type: "tween" },
+    },
+  };
 
   // NOTE 박스 클릭 시 팝업 오픈
   const onBoxClicked = (movieId: number) => {
-    router.push("/movieApp", `/movieApp/movies/${movieId}`, { shallow: true });
+    setClickedId(movieId);
+    router.push(router.asPath, `${router.asPath}movies/${movieId}`, {
+      shallow: true,
+    });
   };
 
   return (
-    <ItemWrap
-      key={movie.id}
-      layoutId={movie.id + ""}
-      variants={boxVariants}
-      initial="normal"
-      whileHover="hover"
-      transition={{ type: "tween" }}
-      bgphoto={makeMovieImagePath(movie.poster_path, "w500")}
-      onClick={() => onBoxClicked(movie.id)}
-    >
-      <Item>
-        <Info variants={showVariants}>
-          <h3>{movie.title}</h3>
-          <div>{movie.vote_average}</div>
-        </Info>
-      </Item>
-    </ItemWrap>
+    <>
+      <ItemWrap
+        key={movie.id}
+        layoutId={movie.id + ""}
+        variants={boxVariants}
+        initial="normal"
+        whileHover="hover"
+        transition={{ type: "tween" }}
+        bgphoto={
+          movie.poster_path
+            ? makeMovieImagePath(movie.poster_path, "w500")
+            : null
+        }
+        onClick={() => onBoxClicked(movie.id)}
+      >
+        <Item>
+          <Info variants={showVariants}>
+            <h3>{movie.title}</h3>
+            <div>{movie.vote_average.toFixed(1)}</div>
+          </Info>
+        </Item>
+      </ItemWrap>
+    </>
   );
 };
 

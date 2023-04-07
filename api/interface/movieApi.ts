@@ -1,8 +1,8 @@
 // 현재상영작
 export interface IMovie {
   id: number;
-  backdrop_path: string;
-  poster_path: string;
+  backdrop_path: string | null;
+  poster_path: string | null;
   title: string;
   overview: string;
   vote_average: number;
@@ -22,8 +22,8 @@ export interface ISimilarMovie {
   id: number;
   title: string;
   overview: string;
-  poster_path: string;
-  backdrop_path: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
   popularity: number;
   release_date: string;
 }
