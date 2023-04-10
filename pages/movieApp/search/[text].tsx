@@ -10,8 +10,8 @@ import {
   ISearchedResult,
   ISearchedResults,
 } from "@/api/interface/searchApi";
-import Layout from "@/components/movieApp/Layout";
-import Box from "@/components/movieApp/Box";
+import Layout from "@/components/movieApp/template/Layout";
+import Box from "@/components/movieApp/organism/Box_old";
 import { commonAtom } from "@/store";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
 import { useMemo, useState } from "react";

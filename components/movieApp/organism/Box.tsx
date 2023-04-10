@@ -7,15 +7,24 @@ import { IMovie } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { commonAtom } from "@/store";
 import { ISearchedResult } from "@/api/interface/searchApi";
+import { useIsMobile } from "@/hooks";
 
-const ItemWrap = styled(motion.div)<{ bgphoto: string | null }>`
+interface IStyle {
+  isMobile: string | any;
+  bgphoto: string | null;
+  offset: number;
+  index: number;
+}
+const ItemWrap = styled(motion.div)<IStyle>`
   position: relative;
+
+  min-width: ${(props) => `calc(${100 / props.offset}% - 10px)`};
 
   height: 200px;
   min-height: 100px;
   max-height: 300px;
 
-  padding-top: 150%;
+  padding-top: ${(props) => (props.isMobile ? "50%" : "26%")};
 
   background-image: url(${(props) => props.bgphoto});
   background-color: ${(props) => !props.bgphoto && "#353535"};
@@ -30,6 +39,10 @@ const ItemWrap = styled(motion.div)<{ bgphoto: string | null }>`
   &:last-child {
     transform-origin: center right;
   }
+  /* &:nth-child(${(props) => props.offset * (props.index + 1) + 1}) {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+      url(${(props) => props.bgphoto});
+  } */
 `;
 const Item = styled.div`
   position: absolute;
@@ -68,8 +81,11 @@ const Info = styled(motion.div)`
 
 interface IBoxProps {
   movie: IMovie | ISearchedResult;
+  offset: number; // display될 숫자
+  index: number;
 }
-const Box = ({ movie }: IBoxProps) => {
+const Box = ({ movie, offset, index }: IBoxProps) => {
+  const isMobileSize = useIsMobile();
   const router = useRouter();
 
   const setClickedId = useSetRecoilState(commonAtom);
@@ -78,8 +94,8 @@ const Box = ({ movie }: IBoxProps) => {
   const boxVariants = {
     normal: { scale: 1 },
     hover: {
-      scale: 1.3,
-      y: -22,
+      scale: 1.05,
+      y: -16,
       zIndex: 99,
       transition: {
         delay: BOX_EFFECT_DELAY,
@@ -112,11 +128,14 @@ const Box = ({ movie }: IBoxProps) => {
         initial="normal"
         whileHover="hover"
         transition={{ type: "tween" }}
+        isMobile={isMobileSize}
         bgphoto={
           movie.poster_path
             ? makeMovieImagePath(movie.poster_path, "w500")
             : null
         }
+        offset={offset}
+        index={index}
         onClick={() => onBoxClicked(movie.id)}
       >
         <Item>

@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useRecoilValue } from "recoil";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 import { movieAPIs } from "@/api";
 import { IGetNowMoviesResult } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
-import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
-import Box from "@/components/movieApp/Box";
 import { commonAtom } from "@/store";
-import ButtonIcon from "@/components/atoms/ButtonIcon";
+
+import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
+import ButtonIcon from "@/components/movieApp/atoms/ButtonIcon";
+import Sliders from "@/components/movieApp/organism/Slider";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -27,7 +28,7 @@ const Main = styled.main``;
 const Banner = styled.div<{ bgphoto: string }>`
   position: relative;
 
-  height: 52vw;
+  height: 35vw;
   min-height: 60vh;
 
   /* linear-gradient로 이미지에 배경색 추가 */
@@ -35,14 +36,14 @@ const Banner = styled.div<{ bgphoto: string }>`
     url(${(props) => props.bgphoto});
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: top center;
   text-shadow: 2px 2px 4px rgb(0 0 0 / 45%);
 
   padding: 0 4%;
 `;
 const BannerContents = styled.div`
   position: absolute;
-  bottom: 35%;
+  bottom: 12%;
   left: 4%;
 `;
 const Title = styled.h2`
@@ -83,42 +84,11 @@ const Overview = styled.p<IMediaStyle>`
   margin: 10px 0;
 `;
 
-const Slider = styled.div`
-  position: relative;
-  top: -140px;
-
-  margin: 0 4%;
+const ListBox = styled.div`
+  padding: 0 4%;
+  overflow: hidden;
 `;
-const Row = styled(motion.div)<IMediaStyle>`
-  position: absolute;
 
-  width: 100%;
-
-  display: grid;
-  gap: 10px;
-  grid-template-columns: ${(props) =>
-    props.isMobile
-      ? "repeat(3, minmax(100px, 1fr))"
-      : "repeat(6, minmax(100px, 1fr))"};
-`;
-const Left = styled(motion.div)`
-  position: absolute;
-  top: calc(50% - 12px);
-  left: -23px;
-
-  font-size: 24px;
-  transform: rotate(180deg);
-
-  color: white;
-  z-index: 10;
-  opacity: 0;
-`;
-const Right = styled.div``;
-
-const SubTitle = styled.div<IMediaStyle>`
-  font-size: 16px;
-  margin-bottom: 8px;
-`;
 const Loader = styled.div`
   height: 20vh;
 
@@ -136,36 +106,6 @@ export default function Home() {
     () => movieAPIs.getNowMovies()
   );
 
-  // NOTE [최신 개봉 영화] Slider
-  const offset = isMobileSize ? 3 : 6;
-  const [index, setIndex] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  const increaseIndex = () => {
-    if (data) {
-      const totalMovies = data.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-
-      if (leaving) return;
-      toggleLeaving();
-      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-    }
-  };
-  const decreaseIndex = () => setIndex((prev) => (prev !== 0 ? prev - 1 : 0));
-  const toggleLeaving = () => setLeaving((prev) => !prev);
-  // Animation
-  const BOX_EFFECT_DELAY = 0.7;
-  const rowVariants = {
-    hidden: { x: typeof window !== "undefined" ? window.outerWidth : 0 },
-    visible: { x: 0 },
-    exit: { x: typeof window !== "undefined" ? -window.outerWidth + 10 : 0 },
-  };
-  const showVariants = {
-    hover: {
-      opacity: 1,
-      transition: { delay: BOX_EFFECT_DELAY, duration: 0.2, type: "tween" },
-    },
-  };
-
   const clickedId = useRecoilValue(commonAtom);
   const clickedMovie =
     clickedId && data?.results.find((movie) => movie.id === +clickedId);
@@ -182,7 +122,6 @@ export default function Home() {
       ) : (
         <>
           <Banner
-            onClick={increaseIndex}
             bgphoto={makeMovieImagePath(
               data?.results[BANNER_SHOW_IDX].backdrop_path || ""
             )}
@@ -207,34 +146,13 @@ export default function Home() {
               />
             </BannerContents>
           </Banner>
-
-          <Slider>
-            <SubTitle isMobile={isMobileSize}>최신 영화</SubTitle>
-            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-              <Row
-                key={index}
-                variants={rowVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{ type: "tween", duration: 1 }}
-                whileHover="hover"
-                isMobile={isMobileSize}
-              >
-                {index !== 0 && (
-                  <Left variants={showVariants} onClick={decreaseIndex}>
-                    <FontAwesomeIcon icon={faArrowRight} />
-                  </Left>
-                )}
-                {data?.results
-                  .slice(1)
-                  .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
-                    <Box key={movie.id} movie={movie} />
-                  ))}
-              </Row>
-            </AnimatePresence>
-          </Slider>
+          <ListBox>
+            <Sliders
+              title="최신 영화"
+              list={data?.results.slice(1) ?? []}
+              offset={isMobileSize ? 3 : 6}
+            />
+          </ListBox>
           <AnimatePresence>
             {clickedMovie ? (
               <MovieDetailPopup movie={clickedMovie} path="/movieApp" />

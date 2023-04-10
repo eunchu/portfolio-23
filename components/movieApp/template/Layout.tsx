@@ -1,4 +1,4 @@
-import Header from "@/components/movieApp/Header";
+import Header from "@/components/movieApp/organism/Header";
 
 const Layout = (props: { children: React.ReactNode }) => {
   return (

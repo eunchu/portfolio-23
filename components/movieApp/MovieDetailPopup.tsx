@@ -19,7 +19,7 @@ import { useIsMobile } from "@/hooks";
 import MovieBox from "@/components/movieApp/MovieBox";
 import { commonAtom } from "@/store";
 import { ISearchedResult } from "@/api/interface/searchApi";
-import ButtonIcon from "../atoms/ButtonIcon";
+import ButtonIcon from "./atoms/ButtonIcon";
 
 interface IMediaStyle {
   isMobile: boolean;
