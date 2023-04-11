@@ -8,14 +8,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 import { movieAPIs } from "@/api";
-import { IGetNowMoviesResult } from "@/api/interface/movieApi";
+import {
+  IGetNowMoviesResult,
+  IGetPopularMovies,
+} from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
 import { commonAtom } from "@/store";
 
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
 import ButtonIcon from "@/components/movieApp/atoms/ButtonIcon";
-import Sliders from "@/components/movieApp/organism/Slider";
+import Slider from "@/components/movieApp/organism/Slider";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -86,6 +89,7 @@ const Overview = styled.p<IMediaStyle>`
 
 const ListBox = styled.div`
   padding: 0 4%;
+  margin-bottom: 30px;
   overflow: hidden;
 `;
 
@@ -104,6 +108,12 @@ export default function Home() {
   const { data, isLoading } = useQuery<IGetNowMoviesResult>(
     ["movies", "nowPlaying"],
     () => movieAPIs.getNowMovies()
+  );
+
+  // NOTE GET 인기 영화 정보
+  const { data: popularMovies } = useQuery<IGetPopularMovies>(
+    ["movies", "popular"],
+    () => movieAPIs.getPopularMovies()
   );
 
   const clickedId = useRecoilValue(commonAtom);
@@ -147,12 +157,21 @@ export default function Home() {
             </BannerContents>
           </Banner>
           <ListBox>
-            <Sliders
+            <Slider
               title="최신 영화"
-              list={data?.results.slice(1) ?? []}
+              list={data?.results.slice(1, 19) ?? []}
               offset={isMobileSize ? 3 : 6}
             />
           </ListBox>
+          <ListBox>
+            <Slider
+              type="ranking"
+              title="지금 뜨는! 영화"
+              list={popularMovies?.results.slice(0, 18) ?? []}
+              offset={isMobileSize ? 3 : 6}
+            />
+          </ListBox>
+          <div style={{ height: "300px" }}></div>
           <AnimatePresence>
             {clickedMovie ? (
               <MovieDetailPopup movie={clickedMovie} path="/movieApp" />

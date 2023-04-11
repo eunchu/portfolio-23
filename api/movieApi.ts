@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   IGetMovie,
   IGetNowMoviesResult,
+  IGetPopularMovies,
   IGetSimilarMoviesResult,
 } from "./interface/movieApi";
 
@@ -14,7 +15,7 @@ export const moviesFactory = ({ baseUrl, fixedQuery }: IApiFactory) => {
   // NOTE [GET] 현재 상영작 리스트
   const getNowMovies = async () =>
     (await (
-      await axios.get(`${baseUrl}/now_playing?${fixedQuery}&region=KR`)
+      await axios.get(`${baseUrl}/now_playing?${fixedQuery}`)
     ).data) as IGetNowMoviesResult;
 
   // NOTE [GET] 관련 영화 리스트
@@ -29,5 +30,11 @@ export const moviesFactory = ({ baseUrl, fixedQuery }: IApiFactory) => {
       await axios.get(`${baseUrl}/${movieId}?${fixedQuery}`)
     ).data) as IGetMovie;
 
-  return { getNowMovies, getSimilarMovies, getMovie };
+  // NOTE [GET] 인기 영화 목록
+  const getPopularMovies = async () =>
+    (await (
+      await axios.get(`${baseUrl}/popular?${fixedQuery}`)
+    ).data) as IGetPopularMovies;
+
+  return { getNowMovies, getSimilarMovies, getMovie, getPopularMovies };
 };

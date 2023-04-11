@@ -43,3 +43,18 @@ export interface IGetMovie {
   release_date: string;
   runtime: number;
 }
+// 인기 영화
+export interface IGetPopularMoviesResult {
+  id: number;
+  overview: string;
+  title: string;
+  name?: string;
+  backdrop_path: string | null;
+  poster_path: string | null;
+  original_title: string;
+  vote_average: number;
+  release_date: string;
+}
+export interface IGetPopularMovies {
+  results: IGetPopularMoviesResult[];
+}

@@ -13,7 +13,6 @@ interface IStyle {
   isMobile: string | any;
   bgphoto: string | null;
   offset: number;
-  index: number;
 }
 const ItemWrap = styled(motion.div)<IStyle>`
   position: relative;
@@ -39,10 +38,6 @@ const ItemWrap = styled(motion.div)<IStyle>`
   &:last-child {
     transform-origin: center right;
   }
-  /* &:nth-child(${(props) => props.offset * (props.index + 1) + 1}) {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-      url(${(props) => props.bgphoto});
-  } */
 `;
 const Item = styled.div`
   position: absolute;
@@ -82,9 +77,8 @@ const Info = styled(motion.div)`
 interface IBoxProps {
   movie: IMovie | ISearchedResult;
   offset: number; // display될 숫자
-  index: number;
 }
-const Box = ({ movie, offset, index }: IBoxProps) => {
+const Box = ({ movie, offset }: IBoxProps) => {
   const isMobileSize = useIsMobile();
   const router = useRouter();
 
@@ -135,7 +129,6 @@ const Box = ({ movie, offset, index }: IBoxProps) => {
             : null
         }
         offset={offset}
-        index={index}
         onClick={() => onBoxClicked(movie.id)}
       >
         <Item>

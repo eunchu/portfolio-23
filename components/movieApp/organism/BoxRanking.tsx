@@ -7,15 +7,23 @@ import { IMovie } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { commonAtom } from "@/store";
 import { ISearchedResult } from "@/api/interface/searchApi";
+import { useIsMobile } from "@/hooks";
 
-const ItemWrap = styled(motion.div)<{ bgphoto: string | null }>`
+interface IStyle {
+  isMobile: string | any;
+  bgphoto: string | null;
+  offset: number;
+}
+const ItemWrap = styled(motion.div)<IStyle>`
   position: relative;
 
-  height: 200px;
-  min-height: 100px;
+  min-width: ${(props) => `calc(${100 / props.offset}% - 10px)`};
+
+  height: 180px;
+  min-height: 80px;
   max-height: 300px;
 
-  padding-top: 150%;
+  padding-top: ${(props) => (props.isMobile ? "8%" : "8%")};
 
   background-image: url(${(props) => props.bgphoto});
   background-color: ${(props) => !props.bgphoto && "#353535"};
@@ -39,59 +47,57 @@ const Item = styled.div`
   height: 100%;
   width: 100%;
 `;
-const Info = styled(motion.div)`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -36px;
-
-  height: 40px;
+const Info = styled.div`
+  width: 100%;
 
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
 
-  font-size: 12px;
-  background-color: #313131;
-  border-radius: 0 0 4px 4px;
+  position: absolute;
+  bottom: -26px;
+  left: 0;
 
-  padding: 10px;
-  opacity: 0;
-  h3 {
-    width: 80%;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+`;
+const Title = styled.h3`
+  font-size: 16px;
+  line-height: 16px;
 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  flex-grow: 1;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+const RankNumber = styled.div`
+  font-size: 70px;
+  line-height: 60px;
+  font-weight: bold;
+  font-style: italic;
+
+  margin-right: 10px;
 `;
 
 interface IBoxProps {
+  rank: number;
   movie: IMovie | ISearchedResult;
+  offset: number; // display될 숫자
 }
-const Box = ({ movie }: IBoxProps) => {
+const Box = ({ rank, movie, offset }: IBoxProps) => {
+  const isMobileSize = useIsMobile();
   const router = useRouter();
 
   const setClickedId = useSetRecoilState(commonAtom);
 
-  const BOX_EFFECT_DELAY = 0.7;
   const boxVariants = {
-    normal: { scale: 1 },
+    normal: { y: 0 },
     hover: {
-      scale: 1.05,
       y: -16,
-      zIndex: 99,
       transition: {
-        delay: BOX_EFFECT_DELAY,
+        delay: 0.5,
         duration: 0.2,
         type: "tween",
       },
-    },
-  };
-  const showVariants = {
-    hover: {
-      opacity: 1,
-      transition: { delay: BOX_EFFECT_DELAY, duration: 0.2, type: "tween" },
     },
   };
 
@@ -106,23 +112,25 @@ const Box = ({ movie }: IBoxProps) => {
   return (
     <>
       <ItemWrap
-        key={movie.id}
-        layoutId={movie.id + ""}
         variants={boxVariants}
         initial="normal"
         whileHover="hover"
         transition={{ type: "tween" }}
+        isMobile={isMobileSize}
         bgphoto={
-          movie.poster_path
-            ? makeMovieImagePath(movie.poster_path, "w500")
+          movie.backdrop_path
+            ? makeMovieImagePath(movie.backdrop_path, "w500")
             : null
         }
+        offset={offset}
         onClick={() => onBoxClicked(movie.id)}
       >
         <Item>
-          <Info variants={showVariants}>
-            <h3>{movie.title || movie.name}</h3>
-            <div>{movie.vote_average.toFixed(1)}</div>
+          <Info>
+            <RankNumber>{rank}</RankNumber>
+            <Title title={movie.title || movie.name}>
+              {movie.title || movie.name}
+            </Title>
           </Info>
         </Item>
       </ItemWrap>

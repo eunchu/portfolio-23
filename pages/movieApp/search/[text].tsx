@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
@@ -5,16 +6,13 @@ import { AnimatePresence } from "framer-motion";
 import { useRecoilValue } from "recoil";
 
 import { searchAPIs } from "@/api";
-import {
-  ISearchedMovies,
-  ISearchedResult,
-  ISearchedResults,
-} from "@/api/interface/searchApi";
-import Layout from "@/components/movieApp/template/Layout";
-import Box from "@/components/movieApp/organism/Box_old";
+import { ISearchedResult, ISearchedResults } from "@/api/interface/searchApi";
 import { commonAtom } from "@/store";
+import { useIsMobile } from "@/hooks";
+
+import Layout from "@/components/movieApp/template/Layout";
+import Box from "@/components/movieApp/organism/Box";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
-import { useMemo, useState } from "react";
 
 const Container = styled.div`
   margin-top: 110px;
@@ -57,19 +55,11 @@ const Items = styled.ul`
 
 const Search = () => {
   const { query } = useRouter();
+  const isMobileSize = useIsMobile();
 
   const [movieListHover, setMovieListHover] = useState<boolean>(false);
   const [seriesListHover, setSeriesistHover] = useState<boolean>(false);
   const clickedId = useRecoilValue(commonAtom);
-
-  // NOTE GET 영화 검색 리스트
-  // const { data: searchedMovies } = useQuery<ISearchedMovies>(
-  //   ["movies", "searched"],
-  //   () => searchAPIs.getSearchedMovies(query.text + ""),
-  //   {
-  //     enabled: !!query.text,
-  //   }
-  // );
 
   // NOTE GET 검색 리스트
   const { data: seachedResults } = useQuery<ISearchedResults>(
@@ -95,8 +85,6 @@ const Search = () => {
     clickedId &&
     seachedResults?.results.find((movie) => movie.id === +clickedId);
 
-  // console.log("clickedMovie", clickedId, clickedMovie);
-
   return (
     <Layout>
       <Container>
@@ -117,7 +105,7 @@ const Search = () => {
             </TypeTitleWrap>
             <Items>
               {movies.slice(0, 6).map((item: ISearchedResult) => (
-                <Box key={item.id} movie={item} />
+                <Box key={item.id} movie={item} offset={isMobileSize ? 3 : 6} />
               ))}
             </Items>
           </div>
@@ -135,7 +123,7 @@ const Search = () => {
             </TypeTitleWrap>
             <Items>
               {series.slice(0, 6).map((item: ISearchedResult) => (
-                <Box key={item.id} movie={item} />
+                <Box key={item.id} movie={item} offset={isMobileSize ? 3 : 6} />
               ))}
             </Items>
           </div>

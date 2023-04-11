@@ -10,6 +10,7 @@ import { ISearchedResult } from "@/api/interface/searchApi";
 import { useIsMobile } from "@/hooks";
 
 import Box from "./Box";
+import BoxRanking from "./BoxRanking";
 
 const Container = styled.div`
   position: relative;
@@ -23,7 +24,7 @@ const Row = styled(motion.div)<{ isMobile: boolean }>`
   flex-direction: row;
   gap: 10px;
 
-  padding-bottom: 22px;
+  padding-bottom: 32px;
 `;
 const Left = styled.div`
   position: absolute;
@@ -87,11 +88,12 @@ const RightArrowBox = styled.div`
 `;
 
 interface ISliderProps {
+  type?: string;
   title: string;
   list: IMovie[] | ISearchedResult[];
   offset: number; // display될 숫자
 }
-const Slider = ({ title, list, offset }: ISliderProps) => {
+const Slider = ({ type, title, list, offset }: ISliderProps) => {
   const isMobileSize = useIsMobile();
 
   const [index, setIndex] = useState<number>(0);
@@ -126,6 +128,8 @@ const Slider = ({ title, list, offset }: ISliderProps) => {
     }
   };
 
+  console.log(list.length, list.length / offset, index + 1);
+
   return (
     <Container>
       <Title>{title}</Title>
@@ -145,11 +149,20 @@ const Slider = ({ title, list, offset }: ISliderProps) => {
         animate={click ? "nextMove" : clickLeft && "prevMove"}
         transition={{ type: "tween", duration: 1 }}
       >
-        {list.slice(0, 18).map((item) => (
-          <Box key={item.id} movie={item} offset={offset} index={index} />
-        ))}
+        {list.map((item, idx) => {
+          return type === "ranking" ? (
+            <BoxRanking
+              rank={idx + 1}
+              key={item.id}
+              movie={item}
+              offset={offset}
+            />
+          ) : (
+            <Box key={item.id} movie={item} offset={offset} />
+          );
+        })}
       </Row>
-      {(list.length - 1) / offset !== index + 1 && (
+      {list.length / offset !== index + 1 && (
         <>
           <Right onClick={increaseIndex}>
             <FontAwesomeIcon icon={faAngleRight} />
