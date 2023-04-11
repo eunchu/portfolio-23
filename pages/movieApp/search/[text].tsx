@@ -46,11 +46,15 @@ const TotalLink = styled.span`
   color: ${(props) => props.theme.color.textSub};
   cursor: pointer;
 `;
-const Items = styled.ul`
+const Items = styled.ul<{ isMobile: boolean }>`
   display: grid;
-  grid-template-columns: repeat(6, minmax(100px, 1fr));
+  grid-template-columns: ${(props) =>
+    props.isMobile
+      ? "repeat(3, minmax(100px, 1fr))"
+      : "repeat(6, minmax(100px, 1fr))"};
   gap: 10px;
-  margin-bottom: 30px;
+
+  margin-bottom: 40px;
 `;
 
 const Search = () => {
@@ -85,6 +89,8 @@ const Search = () => {
     clickedId &&
     seachedResults?.results.find((movie) => movie.id === +clickedId);
 
+  const displayNum = isMobileSize ? 3 : 6;
+
   return (
     <Layout>
       <Container>
@@ -103,9 +109,14 @@ const Search = () => {
               </TypeTitle>
               {movieListHover && <TotalLink>전체보기</TotalLink>}
             </TypeTitleWrap>
-            <Items>
-              {movies.slice(0, 6).map((item: ISearchedResult) => (
-                <Box key={item.id} movie={item} offset={isMobileSize ? 3 : 6} />
+            <Items isMobile={isMobileSize}>
+              {movies.slice(0, displayNum).map((item: ISearchedResult) => (
+                <Box
+                  key={item.id}
+                  height={"280px"}
+                  movie={item}
+                  offset={isMobileSize ? 3 : 6}
+                />
               ))}
             </Items>
           </div>
@@ -121,9 +132,14 @@ const Search = () => {
               </TypeTitle>
               {seriesListHover && <TotalLink>전체보기</TotalLink>}
             </TypeTitleWrap>
-            <Items>
-              {series.slice(0, 6).map((item: ISearchedResult) => (
-                <Box key={item.id} movie={item} offset={isMobileSize ? 3 : 6} />
+            <Items isMobile={isMobileSize}>
+              {series.slice(0, displayNum).map((item: ISearchedResult) => (
+                <Box
+                  key={item.id}
+                  height={"280px"}
+                  movie={item}
+                  offset={isMobileSize ? 3 : 6}
+                />
               ))}
             </Items>
           </div>

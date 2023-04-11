@@ -10,6 +10,7 @@ import { ISearchedResult } from "@/api/interface/searchApi";
 import { useIsMobile } from "@/hooks";
 
 interface IStyle {
+  height: string;
   isMobile: string | any;
   bgphoto: string | null;
   offset: number;
@@ -19,7 +20,7 @@ const ItemWrap = styled(motion.div)<IStyle>`
 
   min-width: ${(props) => `calc(${100 / props.offset}% - 10px)`};
 
-  height: 200px;
+  height: ${(props) => props.height};
   min-height: 100px;
   max-height: 300px;
 
@@ -75,10 +76,11 @@ const Info = styled(motion.div)`
 `;
 
 interface IBoxProps {
+  height?: string;
   movie: IMovie | ISearchedResult;
   offset: number; // display될 숫자
 }
-const Box = ({ movie, offset }: IBoxProps) => {
+const Box = ({ height, movie, offset }: IBoxProps) => {
   const isMobileSize = useIsMobile();
   const router = useRouter();
 
@@ -128,6 +130,7 @@ const Box = ({ movie, offset }: IBoxProps) => {
             ? makeMovieImagePath(movie.poster_path, "w500")
             : null
         }
+        height={height || "200px"}
         offset={offset}
         onClick={() => onBoxClicked(movie.id)}
       >
