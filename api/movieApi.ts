@@ -4,6 +4,7 @@ import {
   IGetNowMoviesResult,
   IGetPopularMovies,
   IGetSimilarMoviesResult,
+  IGetTopRatedMovies,
 } from "./interface/movieApi";
 
 interface IApiFactory {
@@ -36,5 +37,17 @@ export const moviesFactory = ({ baseUrl, fixedQuery }: IApiFactory) => {
       await axios.get(`${baseUrl}/popular?${fixedQuery}`)
     ).data) as IGetPopularMovies;
 
-  return { getNowMovies, getSimilarMovies, getMovie, getPopularMovies };
+  // NOTE [GET] 최고 등급 영화 목록
+  const getTopRatedMovies = async () =>
+    (await (
+      await axios.get(`${baseUrl}/top_rated?${fixedQuery}`)
+    ).data) as IGetTopRatedMovies;
+
+  return {
+    getNowMovies,
+    getSimilarMovies,
+    getMovie,
+    getPopularMovies,
+    getTopRatedMovies,
+  };
 };

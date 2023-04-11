@@ -116,7 +116,6 @@ const Slider = ({ type, title, list, offset }: ISliderProps) => {
       x: -rowRef.current?.offsetWidth * index - rowRef.current?.offsetWidth,
     }),
   };
-
   const increaseIndex = () => {
     setClick(true);
     setIndex((prev) => prev + 1);
@@ -127,8 +126,6 @@ const Slider = ({ type, title, list, offset }: ISliderProps) => {
       setIndex((prev) => prev - 1);
     }
   };
-
-  console.log(list.length, list.length / offset, index + 1);
 
   return (
     <Container>

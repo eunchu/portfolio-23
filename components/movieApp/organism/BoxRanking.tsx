@@ -112,6 +112,8 @@ const Box = ({ rank, movie, offset }: IBoxProps) => {
   return (
     <>
       <ItemWrap
+        // key={movie.id}
+        // layoutId={movie.id + ""}
         variants={boxVariants}
         initial="normal"
         whileHover="hover"

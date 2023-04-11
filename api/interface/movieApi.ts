@@ -56,5 +56,9 @@ export interface IGetPopularMoviesResult {
   release_date: string;
 }
 export interface IGetPopularMovies {
-  results: IGetPopularMoviesResult[];
+  results: IMovie[];
+}
+// 최고 등급 영화
+export interface IGetTopRatedMovies {
+  results: IMovie[];
 }

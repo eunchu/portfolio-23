@@ -4,6 +4,7 @@ declare module "styled-components" {
   export interface DefaultTheme {
     color: {
       textSub: string;
+      textFooter: string;
       point: string;
     };
   }

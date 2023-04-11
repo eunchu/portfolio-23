@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
@@ -11,6 +11,7 @@ import { movieAPIs } from "@/api";
 import {
   IGetNowMoviesResult,
   IGetPopularMovies,
+  IGetTopRatedMovies,
 } from "@/api/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
@@ -89,7 +90,7 @@ const Overview = styled.p<IMediaStyle>`
 
 const ListBox = styled.div`
   padding: 0 4%;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
   overflow: hidden;
 `;
 
@@ -116,9 +117,22 @@ export default function Home() {
     () => movieAPIs.getPopularMovies()
   );
 
+  // NOTE GET Top Rated 영화
+  const { data: topRatedMovies } = useQuery<IGetTopRatedMovies>(
+    ["movies", "topRated"],
+    () => movieAPIs.getTopRatedMovies()
+  );
+
   const clickedId = useRecoilValue(commonAtom);
+  const allList = useMemo(() => {
+    let all = data?.results;
+    popularMovies && all?.push(...popularMovies?.results);
+    topRatedMovies && all?.push(...topRatedMovies?.results);
+    return all;
+  }, [data?.results, popularMovies, topRatedMovies]);
   const clickedMovie =
-    clickedId && data?.results.find((movie) => movie.id === +clickedId);
+    clickedId && allList?.find((movie) => movie.id === +clickedId);
+
   // 디테일팝업 오픈 시 바디스크롤 막기
   useEffect(() => {
     if (clickedMovie) document.body.style.overflow = "hidden";
@@ -171,7 +185,13 @@ export default function Home() {
               offset={isMobileSize ? 3 : 6}
             />
           </ListBox>
-          <div style={{ height: "300px" }}></div>
+          <ListBox>
+            <Slider
+              title="평점 베스트"
+              list={topRatedMovies?.results.slice(0, 18) ?? []}
+              offset={isMobileSize ? 3 : 6}
+            />
+          </ListBox>
           <AnimatePresence>
             {clickedMovie ? (
               <MovieDetailPopup movie={clickedMovie} path="/movieApp" />
