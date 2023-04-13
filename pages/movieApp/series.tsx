@@ -1,12 +1,20 @@
 import { useMemo } from "react";
 import styled from "styled-components";
 import { useQuery } from "react-query";
+import { AnimatePresence } from "framer-motion";
+import { useRecoilValue } from "recoil";
 
 import { seriesAPIs } from "@/api";
-import { IGetPopularSeriesResult } from "@/api/interface/seriesApi";
+import {
+  IGetOnAirResult,
+  IGetPopularSeriesResult,
+  IGetTopRatedSeriesResult,
+  ISeries,
+} from "@/api/interface/seriesApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
 import { makeEncodeSeriesItem } from "@/utils/make-encode-item";
+import { commonAtom } from "@/store";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +22,7 @@ import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import Layout from "@/components/movieApp/template/Layout";
 import ButtonIcon from "@/components/movieApp/atoms/ButtonIcon";
 import Slider from "@/components/movieApp/organism/Slider";
+import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -99,13 +108,15 @@ const Series = () => {
   );
 
   // NOTE GET Top Rated 시리즈 목록
-  const { data: topRatedSeries } = useQuery(["series", "topRated"], () =>
-    seriesAPIs.getTopRatedSeries()
+  const { data: topRatedSeries } = useQuery<IGetTopRatedSeriesResult>(
+    ["series", "topRated"],
+    () => seriesAPIs.getTopRatedSeries()
   );
 
   // NOTE GET 현재 상영작 목록
-  const { data: onAirSeries } = useQuery(["series", "onAir"], () =>
-    seriesAPIs.getOnAirSeries({ page: 2 })
+  const { data: onAirSeries } = useQuery<IGetOnAirResult>(
+    ["series", "onAir"],
+    () => seriesAPIs.getOnAirSeries({ page: 2 })
   );
 
   // 공통 포맷으로 가공
@@ -114,15 +125,26 @@ const Series = () => {
       popularSeries?.results && makeEncodeSeriesItem(popularSeries?.results),
     [popularSeries?.results]
   );
-  const topRatedList = useMemo(
+  const topRatedList = useMemo<any>(
     () =>
       topRatedSeries?.results && makeEncodeSeriesItem(topRatedSeries?.results),
     [topRatedSeries?.results]
   );
-  const onAirList = useMemo(
+  const onAirList = useMemo<any>(
     () => onAirSeries?.results && makeEncodeSeriesItem(onAirSeries?.results),
     [onAirSeries?.results]
   );
+
+  const clickedId = useRecoilValue(commonAtom);
+  const allList = useMemo(() => {
+    let all = popularSeries?.results;
+    topRatedList && all?.push(...topRatedList);
+    onAirList && all?.push(...onAirList);
+    return all;
+  }, [onAirList, popularSeries?.results, topRatedList]);
+
+  const clickedMovie =
+    clickedId && allList?.find((movie) => movie.id === +clickedId);
 
   return (
     <Layout>
@@ -179,6 +201,15 @@ const Series = () => {
             offset={isMobileSize ? 3 : 6}
           />
         </ListBox>
+        <AnimatePresence>
+          {clickedMovie ? (
+            <MovieDetailPopup
+              type="tv"
+              movie={clickedMovie}
+              path="/movieApp/series"
+            />
+          ) : null}
+        </AnimatePresence>
       </Main>
     </Layout>
   );

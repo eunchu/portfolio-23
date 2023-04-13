@@ -195,7 +195,11 @@ export default function Home() {
           </ListBox>
           <AnimatePresence>
             {clickedMovie ? (
-              <MovieDetailPopup movie={clickedMovie} path="/movieApp" />
+              <MovieDetailPopup
+                type="movie"
+                movie={clickedMovie}
+                path="/movieApp"
+              />
             ) : null}
           </AnimatePresence>
         </>

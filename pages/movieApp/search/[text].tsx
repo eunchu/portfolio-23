@@ -146,8 +146,13 @@ const Search = () => {
         ) : null}
       </Container>
       <AnimatePresence>
+        {/* TODO type tv일때 */}
         {clickedMovie ? (
-          <MovieDetailPopup movie={clickedMovie} path={query.text + ""} />
+          <MovieDetailPopup
+            type="movie"
+            movie={clickedMovie}
+            path={query.text + ""}
+          />
         ) : null}
       </AnimatePresence>
     </Layout>

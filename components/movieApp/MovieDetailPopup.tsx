@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
@@ -13,20 +13,31 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { makeHourFormat, makeMovieImagePath } from "@/utils";
-import { movieAPIs } from "@/api";
-import { IGetSimilarMoviesResult, IMovie } from "@/api/interface/movieApi";
+import { movieAPIs, seriesAPIs } from "@/api";
+import {
+  IGetMovie,
+  IGetSimilarMoviesResult,
+  IMovie,
+} from "@/api/interface/movieApi";
 import { useIsMobile } from "@/hooks";
-import MovieBox from "@/components/movieApp/MovieBox";
 import { commonAtom } from "@/store";
 import { ISearchedResult } from "@/api/interface/searchApi";
 import ButtonIcon from "./atoms/ButtonIcon";
+import {
+  IGetSeriesDetail,
+  IGetSimilarSeriesResult,
+  ISeries,
+} from "@/api/interface/seriesApi";
+
+import MovieBox from "@/components/movieApp/MovieBox";
+import { makeEncodeSimilarItem } from "@/utils/make-encode-item";
 
 interface IMediaStyle {
   isMobile: boolean;
 }
 
 const Overlay = styled(motion.div)`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -181,10 +192,11 @@ const MoreIcon = styled.div<{ activeMore: boolean }>`
 `;
 
 interface IProps {
-  movie: IMovie | ISearchedResult;
+  type: string;
+  movie: IMovie | ISearchedResult | ISeries;
   path: string;
 }
-const MovieDetailPopup = ({ movie, path }: IProps) => {
+const MovieDetailPopup = ({ type, movie, path }: IProps) => {
   const router = useRouter();
   const isMobileSize = useIsMobile();
 
@@ -196,34 +208,67 @@ const MovieDetailPopup = ({ movie, path }: IProps) => {
     setClickedId(null);
   };
 
-  // TODO 클릭한 아이디가 영화가 아니면 시리즈로 검색해야함
-
-  // NOTE GET 관련 영화 리스트
-  const { data: similarData } = useQuery<IGetSimilarMoviesResult>(
-    ["movies", "similar"],
-    () => movieAPIs.getSimilarMovies(movie.id)
+  // NOTE GET 상세 정보
+  const { data: detailMovieData } = useQuery<IGetMovie>(
+    ["movie", "detail"],
+    () => movieAPIs.getMovie(movie.id),
+    {
+      enabled: type === "movie",
+    }
+  );
+  const { data: detailSeriesData } = useQuery<IGetSeriesDetail>(
+    ["series", "detail"],
+    () => seriesAPIs.getSeriesDetail(movie.id),
+    {
+      enabled: type === "tv",
+    }
+  );
+  const detailData = useMemo(
+    () =>
+      type === "movie"
+        ? detailMovieData
+        : { ...detailSeriesData, release_date: "", runtime: 0 },
+    [detailMovieData, detailSeriesData, type]
   );
 
-  // NOTE GET 영화 상세 정보
-  const { data: detailData } = useQuery(["movie", "detail"], () =>
-    movieAPIs.getMovie(movie.id)
+  // NOTE GET 관련 영화 리스트
+  const { data: similarMovieData } = useQuery<IGetSimilarMoviesResult>(
+    ["movies", "similar"],
+    () => movieAPIs.getSimilarMovies(movie.id),
+    {
+      enabled: type === "movie",
+    }
+  );
+  const { data: similarSeriesData } = useQuery<IGetSimilarSeriesResult>(
+    ["series", "similar"],
+    () => seriesAPIs.getSimilarSeries(movie.id),
+    {
+      enabled: type === "tv",
+    }
+  );
+  const similarDataList = useMemo(
+    () =>
+      type === "movie"
+        ? similarMovieData?.results
+        : makeEncodeSimilarItem(similarSeriesData?.results || []),
+    [similarMovieData, similarSeriesData, type]
   );
 
   const displayNum = isMobileSize ? 6 : 9;
   const [visibleData, setVisibleData] = useState(
-    similarData?.results.slice(0, displayNum)
+    similarDataList?.slice(0, displayNum)
   );
   const [activeMore, setActiveMore] = useState(false);
 
   useEffect(() => {
-    setVisibleData(similarData?.results.slice(0, displayNum));
-  }, [similarData, displayNum]);
+    setVisibleData(similarDataList?.slice(0, displayNum));
+  }, [displayNum, similarDataList]);
 
   // NOTE More버튼 클릭 시 모든 관련 영화 출력
   const onClickMore = () => {
-    if (activeMore) setVisibleData(similarData?.results.slice(0, displayNum));
+    if (activeMore) setVisibleData(similarDataList?.slice(0, displayNum));
     else {
-      setVisibleData(similarData?.results);
+      setVisibleData(similarDataList);
     }
     setActiveMore((prev) => !prev);
   };
@@ -255,17 +300,19 @@ const MovieDetailPopup = ({ movie, path }: IProps) => {
         <InfoWrap>
           <InfoTitle>{movie.title}</InfoTitle>
           <InfoOverview>{movie.overview}</InfoOverview>
-          <Details>
-            <Release>{detailData?.release_date.slice(0, 4)}</Release>
-            <RunTime>{makeHourFormat(detailData?.runtime || 0)}</RunTime>
-          </Details>
+          {type === "movie" ? (
+            <Details>
+              <Release>{detailData?.release_date.slice(0, 4)}</Release>
+              <RunTime>{makeHourFormat(detailData?.runtime || 0)}</RunTime>
+            </Details>
+          ) : null}
           <Keywords>
-            {detailData?.genres.map((item) => (
+            {detailData?.genres?.map((item) => (
               <Keyword key={item.id}>#{item.name}</Keyword>
             ))}
           </Keywords>
         </InfoWrap>
-        {similarData?.results.length ? (
+        {similarDataList?.length ? (
           <ListWrap>
             <Title>비슷한 콘텐츠</Title>
             <Items isMobile={isMobileSize}>
@@ -276,7 +323,7 @@ const MovieDetailPopup = ({ movie, path }: IProps) => {
             </Items>
           </ListWrap>
         ) : null}
-        {similarData && similarData.results.length > 8 ? (
+        {similarDataList && similarDataList.length > 8 ? (
           <MoreBox>
             <MoreIcon onClick={onClickMore} activeMore={activeMore}>
               <FontAwesomeIcon icon={faCircleChevronDown} />
