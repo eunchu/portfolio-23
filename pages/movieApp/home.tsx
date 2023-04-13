@@ -27,8 +27,9 @@ interface IMediaStyle {
   isMobile: boolean;
 }
 
-const Main = styled.main``;
-
+const Main = styled.main`
+  margin-bottom: 100px;
+`;
 const Banner = styled.div<{ bgphoto: string }>`
   position: relative;
 
@@ -105,19 +106,19 @@ const Loader = styled.div`
 export default function Home() {
   const isMobileSize = useIsMobile();
 
-  // NOTE GET 배너 영화 정보
+  // NOTE GET 최근 영화 목록
   const { data, isLoading } = useQuery<IGetNowMoviesResult>(
     ["movies", "nowPlaying"],
     () => movieAPIs.getNowMovies()
   );
 
-  // NOTE GET 인기 영화 정보
+  // NOTE GET 인기 영화 목록
   const { data: popularMovies } = useQuery<IGetPopularMovies>(
     ["movies", "popular"],
     () => movieAPIs.getPopularMovies()
   );
 
-  // NOTE GET Top Rated 영화
+  // NOTE GET Top Rated 영화 목록
   const { data: topRatedMovies } = useQuery<IGetTopRatedMovies>(
     ["movies", "topRated"],
     () => movieAPIs.getTopRatedMovies()

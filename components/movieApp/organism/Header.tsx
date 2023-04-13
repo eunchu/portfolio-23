@@ -43,7 +43,7 @@ const Item = styled.li`
   justify-content: center;
 
   color: #e5e5e5;
-  font-size: 12px;
+  font-size: 14px;
 
   transition: color 0.3s ease-in-out;
 
@@ -160,12 +160,18 @@ const Header = () => {
         </Logo>
         <Items>
           <Item>
-            <Link href="/movieApp">Home</Link>
+            <Link href="/">Home</Link>
             {router?.pathname === "/" && <Line layoutId="line" />}
           </Item>
           <Item>
-            <Link href="/series">Tv Series</Link>
-            {router?.pathname === "/series" && <Line layoutId="line" />}
+            <Link href="/movieApp">Movie</Link>
+            {router?.pathname === "/movieApp" && <Line layoutId="line" />}
+          </Item>
+          <Item>
+            <Link href="/movieApp/series">Tv Series</Link>
+            {router?.pathname === "/movieApp/series" && (
+              <Line layoutId="line" />
+            )}
           </Item>
         </Items>
       </Col>
