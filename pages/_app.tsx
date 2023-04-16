@@ -10,11 +10,15 @@ config.autoAddCss = false;
 import GlobalStyle from "@/styles/globals";
 import { theme } from "@/styles/theme";
 
+import "./css/select.css";
+
 export default function App({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: 0,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
       },
     },
   });

@@ -197,7 +197,7 @@ export default function Home() {
             {clickedMovie ? (
               <MovieDetailPopup
                 type="movie"
-                movie={clickedMovie}
+                item={clickedMovie}
                 path="/movieApp"
               />
             ) : null}

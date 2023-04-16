@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { useQuery } from "react-query";
 import { useSetRecoilState } from "recoil";
+import { Select } from "antd";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -24,13 +25,15 @@ import { commonAtom } from "@/store";
 import { ISearchedResult } from "@/api/interface/searchApi";
 import ButtonIcon from "./atoms/ButtonIcon";
 import {
+  IGetSeasonesResult,
   IGetSeriesDetail,
   IGetSimilarSeriesResult,
   ISeries,
 } from "@/api/interface/seriesApi";
+import { makeEncodeSimilarItem } from "@/utils/make-encode-item";
 
 import MovieBox from "@/components/movieApp/MovieBox";
-import { makeEncodeSimilarItem } from "@/utils/make-encode-item";
+import SeriesBox from "@/components/movieApp/SeriesBox";
 
 interface IMediaStyle {
   isMobile: boolean;
@@ -143,6 +146,10 @@ const Keywords = styled.ul`
 const Keyword = styled.li``;
 
 const ListWrap = styled.div``;
+const SeriesWrap = styled.div`
+  padding: 0 4%;
+  margin-bottom: 50px;
+`;
 const Title = styled.h2`
   font-size: 18px;
   margin: 10px 0 14px 4%;
@@ -157,6 +164,18 @@ const Items = styled.ul<IMediaStyle>`
 
   padding: 0 4%;
 `;
+
+const TopWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+`;
+const SubTitle = styled.div`
+  font-size: 16px;
+`;
+const SelectBox = styled.div``;
 
 const MoreBox = styled.div`
   position: relative;
@@ -193,14 +212,16 @@ const MoreIcon = styled.div<{ activeMore: boolean }>`
 
 interface IProps {
   type: string;
-  movie: IMovie | ISearchedResult | ISeries;
+  item: IMovie | ISearchedResult | ISeries;
   path: string;
 }
-const MovieDetailPopup = ({ type, movie, path }: IProps) => {
+const MovieDetailPopup = ({ type, item, path }: IProps) => {
   const router = useRouter();
   const isMobileSize = useIsMobile();
 
   const setClickedId = useSetRecoilState(commonAtom);
+  const [activeSeasonName, setActiveSeasonName] = useState<string>("");
+  const [activeSeason, setActiveSeason] = useState<number | null>(null);
 
   // NOTE 팝업닫기
   const onClosePopup = () => {
@@ -211,14 +232,14 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
   // NOTE GET 상세 정보
   const { data: detailMovieData } = useQuery<IGetMovie>(
     ["movie", "detail"],
-    () => movieAPIs.getMovie(movie.id),
+    () => movieAPIs.getMovie(item.id),
     {
       enabled: type === "movie",
     }
   );
   const { data: detailSeriesData } = useQuery<IGetSeriesDetail>(
     ["series", "detail"],
-    () => seriesAPIs.getSeriesDetail(movie.id),
+    () => seriesAPIs.getSeriesDetail(item.id),
     {
       enabled: type === "tv",
     }
@@ -226,7 +247,7 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
   const detailData = useMemo(
     () =>
       type === "movie"
-        ? detailMovieData
+        ? { ...detailMovieData, seasons: [] }
         : { ...detailSeriesData, release_date: "", runtime: 0 },
     [detailMovieData, detailSeriesData, type]
   );
@@ -234,14 +255,14 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
   // NOTE GET 관련 영화 리스트
   const { data: similarMovieData } = useQuery<IGetSimilarMoviesResult>(
     ["movies", "similar"],
-    () => movieAPIs.getSimilarMovies(movie.id),
+    () => movieAPIs.getSimilarMovies(item.id),
     {
       enabled: type === "movie",
     }
   );
   const { data: similarSeriesData } = useQuery<IGetSimilarSeriesResult>(
     ["series", "similar"],
-    () => seriesAPIs.getSimilarSeries(movie.id),
+    () => seriesAPIs.getSimilarSeries(item.id),
     {
       enabled: type === "tv",
     }
@@ -252,6 +273,15 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
         ? similarMovieData?.results
         : makeEncodeSimilarItem(similarSeriesData?.results || []),
     [similarMovieData, similarSeriesData, type]
+  );
+
+  // NOTE GET 시리즈 회차 리스트
+  const { data: seasonsData } = useQuery<IGetSeasonesResult>(
+    ["series", "seasons"],
+    () => seriesAPIs.getSeasons(item.id, activeSeason as number),
+    {
+      enabled: type === "tv" && !!activeSeason,
+    }
   );
 
   const displayNum = isMobileSize ? 6 : 9;
@@ -273,6 +303,17 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
     setActiveMore((prev) => !prev);
   };
 
+  // [TV] 시즌 선택 select
+  useEffect(() => {
+    if (detailData.seasons?.length) {
+      setActiveSeasonName(detailData.seasons[0].name);
+      setActiveSeason(detailData.seasons[0].season_number);
+    }
+  }, [detailData.seasons]);
+  const onChangeSeason = useCallback((val: string) => {
+    setActiveSeasonName(val);
+  }, []);
+
   return (
     <>
       <Overlay
@@ -280,14 +321,14 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       />
-      <MovieDetailBox layoutId={movie.id + ""}>
+      <MovieDetailBox layoutId={item.id + ""}>
         <CloseBtn onClick={onClosePopup}>
           <FontAwesomeIcon icon={faXmark} />
         </CloseBtn>
         <PreviewPhoto
           className="image"
           bgphoto={
-            movie.backdrop_path ? makeMovieImagePath(movie.backdrop_path) : null
+            item.backdrop_path ? makeMovieImagePath(item.backdrop_path) : null
           }
         >
           <PlayButton>
@@ -298,11 +339,11 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
           </PlayButton>
         </PreviewPhoto>
         <InfoWrap>
-          <InfoTitle>{movie.title}</InfoTitle>
-          <InfoOverview>{movie.overview}</InfoOverview>
+          <InfoTitle>{item.title}</InfoTitle>
+          <InfoOverview>{item.overview}</InfoOverview>
           {type === "movie" ? (
             <Details>
-              <Release>{detailData?.release_date.slice(0, 4)}</Release>
+              <Release>{detailData?.release_date?.slice(0, 4) || ""}</Release>
               <RunTime>{makeHourFormat(detailData?.runtime || 0)}</RunTime>
             </Details>
           ) : null}
@@ -312,18 +353,38 @@ const MovieDetailPopup = ({ type, movie, path }: IProps) => {
             ))}
           </Keywords>
         </InfoWrap>
-        {similarDataList?.length ? (
+        {type === "tv" ? (
+          <SeriesWrap>
+            <TopWrap>
+              <SubTitle>회차</SubTitle>
+              <SelectBox>
+                <Select
+                  value={activeSeasonName}
+                  style={{ width: 100 }}
+                  onChange={onChangeSeason}
+                  options={detailData.seasons?.map((season) => ({
+                    value: season.name,
+                    label: season.name,
+                  }))}
+                />
+              </SelectBox>
+            </TopWrap>
+            {seasonsData?.episodes.map((item) => (
+              <SeriesBox key={item.id} item={item} />
+            ))}
+          </SeriesWrap>
+        ) : null}
+        {type === "movie" && similarDataList?.length ? (
           <ListWrap>
             <Title>비슷한 콘텐츠</Title>
             <Items isMobile={isMobileSize}>
               {visibleData?.map((item) => (
-                // component type1 : 비슷한 컨텐츠 박스, type2 : 회차 정보
                 <MovieBox key={item.id} data={item} />
               ))}
             </Items>
           </ListWrap>
         ) : null}
-        {similarDataList && similarDataList.length > 8 ? (
+        {type === "movie" && similarDataList && similarDataList.length > 8 ? (
           <MoreBox>
             <MoreIcon onClick={onClickMore} activeMore={activeMore}>
               <FontAwesomeIcon icon={faCircleChevronDown} />

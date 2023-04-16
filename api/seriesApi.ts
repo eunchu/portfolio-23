@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   IGetOnAirResult,
   IGetPopularSeriesResult,
+  IGetSeasonesResult,
   IGetSeriesDetail,
   IGetSimilarSeriesResult,
   IGetTopRatedSeriesResult,
@@ -43,11 +44,18 @@ export const seriesFactory = ({ baseUrl, fixedQuery }: IApiFactory) => {
       await axios.get(`${baseUrl}/${id}/similar?${fixedQuery}`)
     ).data) as IGetSimilarSeriesResult;
 
+  // NOTE [GET] 시즌 정보
+  const getSeasons = async (id: number, seasonNum: number) =>
+    (await (
+      await axios.get(`${baseUrl}/${id}/season/${seasonNum}?${fixedQuery}`)
+    ).data) as IGetSeasonesResult;
+
   return {
     getPopularSeries,
     getOnAirSeries,
     getTopRatedSeries,
     getSeriesDetail,
     getSimilarSeries,
+    getSeasons,
   };
 };

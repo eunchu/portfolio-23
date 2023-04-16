@@ -1,0 +1,5 @@
+:where(.css-dev-only-do-not-override-htwhyh).ant-select-single
+  .ant-select-selector {
+  border-radius: 4px;
+  font-family: "IBM Plex Sans KR", "Noto Sans KR", sans-serif;
+}

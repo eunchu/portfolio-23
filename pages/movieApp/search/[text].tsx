@@ -146,11 +146,10 @@ const Search = () => {
         ) : null}
       </Container>
       <AnimatePresence>
-        {/* TODO type tv일때 */}
         {clickedMovie ? (
           <MovieDetailPopup
-            type="movie"
-            movie={clickedMovie}
+            type={clickedMovie.media_type}
+            item={clickedMovie}
             path={query.text + ""}
           />
         ) : null}

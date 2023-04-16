@@ -23,6 +23,7 @@ import Layout from "@/components/movieApp/template/Layout";
 import ButtonIcon from "@/components/movieApp/atoms/ButtonIcon";
 import Slider from "@/components/movieApp/organism/Slider";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
+import { IMovie } from "@/api/interface/movieApi";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -146,33 +147,28 @@ const Series = () => {
   const clickedMovie =
     clickedId && allList?.find((movie) => movie.id === +clickedId);
 
+  // 배너에 출력할 데이타 선택
+  const bannerData = useMemo(() => {
+    let data = popularList && popularList[BANNER_SHOW_IDX];
+    if (topRatedList && topRatedList[3].title === "아케인") {
+      data = topRatedList[3];
+    }
+    return data;
+  }, [popularList, topRatedList]);
+
   return (
     <Layout>
       <Main>
-        <Banner
-          bgphoto={makeMovieImagePath(
-            popularSeries?.results[BANNER_SHOW_IDX].backdrop_path || ""
-          )}
-        >
+        <Banner bgphoto={makeMovieImagePath(bannerData?.backdrop_path || "")}>
           <BannerContents>
-            <Title>{popularSeries?.results[BANNER_SHOW_IDX].name}</Title>
+            <Title>{bannerData?.title}</Title>
             <DetailWrap>
               <Average>
-                {popularSeries?.results[BANNER_SHOW_IDX].vote_average.toFixed(
-                  1
-                )}{" "}
-                <span>Point</span>
+                {bannerData?.vote_average.toFixed(1)} <span>Point</span>
               </Average>
-              <Release>
-                {popularSeries?.results[BANNER_SHOW_IDX].first_air_date.slice(
-                  0,
-                  4
-                )}
-              </Release>
+              <Release>{bannerData?.release_date.slice(0, 4)}</Release>
             </DetailWrap>
-            <Overview isMobile={isMobileSize}>
-              {popularSeries?.results[BANNER_SHOW_IDX].overview}
-            </Overview>
+            <Overview isMobile={isMobileSize}>{bannerData?.overview}</Overview>
             <ButtonIcon
               text="재생"
               icon={<FontAwesomeIcon icon={faPlay} color="#000000" />}
@@ -205,7 +201,7 @@ const Series = () => {
           {clickedMovie ? (
             <MovieDetailPopup
               type="tv"
-              movie={clickedMovie}
+              item={clickedMovie}
               path="/movieApp/series"
             />
           ) : null}
