@@ -1,8 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import { useRecoilValue } from "recoil";
+import Youtube, { YouTubeProps } from "react-youtube";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -106,6 +107,9 @@ const Loader = styled.div`
 export default function Home() {
   const isMobileSize = useIsMobile();
 
+  const clickedId = useRecoilValue(commonAtom);
+  // const [activePlayId, setActivePlayId] = useState<string | null>(null);
+
   // NOTE GET 최근 영화 목록
   const { data, isLoading } = useQuery<IGetNowMoviesResult>(
     ["movies", "nowPlaying"],
@@ -124,7 +128,11 @@ export default function Home() {
     () => movieAPIs.getTopRatedMovies()
   );
 
-  const clickedId = useRecoilValue(commonAtom);
+  // NOTE GET 비디오 정보
+  const { data: playdata } = useQuery(["movies", "video"], () =>
+    movieAPIs.getMovieVideos(594767)
+  );
+
   const allList = useMemo(() => {
     let all = data?.results;
     popularMovies && all?.push(...popularMovies?.results);
@@ -139,6 +147,8 @@ export default function Home() {
     if (clickedMovie) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "auto";
   }, [clickedMovie]);
+
+  // const onClickPlay = () => setActivePlayId(playdata?.results[0].key);
 
   return (
     <Main>
@@ -167,8 +177,19 @@ export default function Home() {
               </Overview>
               <ButtonIcon
                 text="재생"
+                // onClick={onClickPlay}
                 icon={<FontAwesomeIcon icon={faPlay} color="#000000" />}
               />
+              {/* {activePlayId ? (
+                <Youtube
+                  videoId={activePlayId}
+                  opts={{
+                    playerVars: {
+                      autoplay: 1,
+                    },
+                  }}
+                />
+              ) : null} */}
             </BannerContents>
           </Banner>
           <ListBox>

@@ -43,11 +43,18 @@ export const moviesFactory = ({ baseUrl, fixedQuery }: IApiFactory) => {
       await axios.get(`${baseUrl}/top_rated?${fixedQuery}`)
     ).data) as IGetTopRatedMovies;
 
+  // NOTE [GET] 영상 정보
+  const getMovieVideos = async (movieId: number) =>
+    await (
+      await axios.get(`${baseUrl}/${movieId}/videos?${fixedQuery}`)
+    ).data;
+
   return {
     getNowMovies,
     getSimilarMovies,
     getMovie,
     getPopularMovies,
     getTopRatedMovies,
+    getMovieVideos,
   };
 };

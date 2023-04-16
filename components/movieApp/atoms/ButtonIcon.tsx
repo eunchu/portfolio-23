@@ -32,10 +32,11 @@ interface IButtonIconProps {
   size?: "small" | "middle" | "large";
   text: string;
   icon: React.ReactNode;
+  onClick?: any;
 }
-const ButtonIcon = ({ width, size, text, icon }: IButtonIconProps) => {
+const ButtonIcon = ({ width, size, text, icon, onClick }: IButtonIconProps) => {
   return (
-    <Button width={width ?? "72px"}>
+    <Button width={width ?? "72px"} onClick={onClick}>
       <Icon>{icon}</Icon>
       <span>{text}</span>
     </Button>

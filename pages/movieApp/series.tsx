@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 import { AnimatePresence } from "framer-motion";
@@ -9,7 +9,6 @@ import {
   IGetOnAirResult,
   IGetPopularSeriesResult,
   IGetTopRatedSeriesResult,
-  ISeries,
 } from "@/api/interface/seriesApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
@@ -23,7 +22,6 @@ import Layout from "@/components/movieApp/template/Layout";
 import ButtonIcon from "@/components/movieApp/atoms/ButtonIcon";
 import Slider from "@/components/movieApp/organism/Slider";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
-import { IMovie } from "@/api/interface/movieApi";
 
 const BANNER_SHOW_IDX = 0;
 
@@ -155,6 +153,12 @@ const Series = () => {
     }
     return data;
   }, [popularList, topRatedList]);
+
+  // 디테일팝업 오픈 시 바디스크롤 막기
+  useEffect(() => {
+    if (clickedMovie) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "auto";
+  }, [clickedMovie]);
 
   return (
     <Layout>

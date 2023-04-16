@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
@@ -90,6 +90,12 @@ const Search = () => {
     seachedResults?.results.find((movie) => movie.id === +clickedId);
 
   const displayNum = isMobileSize ? 3 : 6;
+
+  // 디테일팝업 오픈 시 바디스크롤 막기
+  useEffect(() => {
+    if (clickedMovie) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "auto";
+  }, [clickedMovie]);
 
   return (
     <Layout>
