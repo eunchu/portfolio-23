@@ -45,7 +45,9 @@ const TitleWrap = styled.div`
   margin-bottom: 10px;
 `;
 const Title = styled.h3`
-  width: 80%;
+  /* width: 80%; */
+  width: 0;
+  flex-grow: 1;
 
   font-size: 14px;
   font-weight: bold;
@@ -53,6 +55,8 @@ const Title = styled.h3`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  margin-right: 8px;
 `;
 const RunTime = styled.p`
   color: ${(props) => props.theme.color.textSub};

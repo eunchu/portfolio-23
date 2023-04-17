@@ -36,7 +36,7 @@ interface IButtonIconProps {
 }
 const ButtonIcon = ({ width, size, text, icon, onClick }: IButtonIconProps) => {
   return (
-    <Button width={width ?? "72px"} onClick={onClick}>
+    <Button width={width ?? "75px"} onClick={onClick}>
       <Icon>{icon}</Icon>
       <span>{text}</span>
     </Button>

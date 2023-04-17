@@ -139,11 +139,14 @@ const RunTime = styled.p`
 const Keywords = styled.ul`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 
   margin-top: 8px;
 `;
-const Keyword = styled.li``;
+const Keyword = styled.li`
+  word-break: break-all;
+`;
 
 const ListWrap = styled.div``;
 const SeriesWrap = styled.div`
