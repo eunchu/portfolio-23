@@ -45,7 +45,6 @@ const TitleWrap = styled.div`
   margin-bottom: 10px;
 `;
 const Title = styled.h3`
-  /* width: 80%; */
   width: 0;
   flex-grow: 1;
 

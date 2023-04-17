@@ -280,10 +280,10 @@ const MovieDetailPopup = ({ type, item, path }: IProps) => {
 
   // NOTE GET 시리즈 회차 리스트
   const { data: seasonsData } = useQuery<IGetSeasonesResult>(
-    ["series", "seasons"],
+    ["series", "seasons", activeSeason],
     () => seriesAPIs.getSeasons(item.id, activeSeason as number),
     {
-      enabled: type === "tv" && !!activeSeason,
+      enabled: type === "tv" && activeSeason !== null,
     }
   );
 
@@ -313,9 +313,13 @@ const MovieDetailPopup = ({ type, item, path }: IProps) => {
       setActiveSeason(detailData.seasons[0].season_number);
     }
   }, [detailData.seasons]);
-  const onChangeSeason = useCallback((val: string) => {
-    setActiveSeasonName(val);
-  }, []);
+  const onChangeSeason = useCallback(
+    (obj: { value: number; label: string } | any) => {
+      setActiveSeason(obj.value);
+      setActiveSeasonName(obj.label);
+    },
+    []
+  );
 
   return (
     <>
@@ -364,9 +368,9 @@ const MovieDetailPopup = ({ type, item, path }: IProps) => {
                 <Select
                   value={activeSeasonName}
                   style={{ width: 100 }}
-                  onChange={onChangeSeason}
+                  onChange={(_, obj) => onChangeSeason(obj)}
                   options={detailData.seasons?.map((season) => ({
-                    value: season.name,
+                    value: season.season_number,
                     label: season.name,
                   }))}
                 />
@@ -375,6 +379,7 @@ const MovieDetailPopup = ({ type, item, path }: IProps) => {
             {seasonsData?.episodes.map((item) => (
               <SeriesBox key={item.id} item={item} />
             ))}
+            {!seasonsData?.episodes.length && <div>에피소드 정보 없음</div>}
           </SeriesWrap>
         ) : null}
         {type === "movie" && similarDataList?.length ? (
