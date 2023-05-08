@@ -1,6 +1,7 @@
+import styled from "styled-components";
+
 import { IEpisode } from "@/api/interface/seriesApi";
 import { makeMovieImagePath } from "@/utils";
-import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;

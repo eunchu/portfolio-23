@@ -30,7 +30,7 @@ const Item = styled.li`
   min-height: 80px;
   max-height: 200px;
 `;
-const Box = styled(motion.div)`
+const Box = styled(motion.div)<{ bg: string }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -42,7 +42,12 @@ const Box = styled(motion.div)`
   align-items: center;
   justify-content: center;
 
-  background-color: #8d8d8d;
+  background-image: linear-gradient(to top, #181818, transparent),
+    url(${(props) => props.bg});
+  background-position: top center;
+  background-size: cover;
+
+  /* background-color: #8d8d8d; */
   border-radius: 4px;
 
   cursor: pointer;
@@ -71,7 +76,7 @@ const Home = () => {
     hover: (i: number) => {
       const delay = 1 + i * 0.5;
       return {
-        opacity: 1,
+        opacity: 0.6,
         pathLength: 1,
         transition: {
           pathLength: {
@@ -89,10 +94,7 @@ const Home = () => {
     {
       title: "Movie App",
       link: "/movieApp",
-    },
-    {
-      title: "Ing...",
-      link: "/",
+      img: "https://image.tmdb.org/t/p/original//h8gHn0OzBoaefsYseUByqsmEDMY.jpg",
     },
   ];
 
@@ -100,33 +102,43 @@ const Home = () => {
     <Container>
       <Title>Portfolio</Title>
       <Items>
-        {items.map(({ title, link }: { title: string; link: string }) => (
-          <Link key={title} href={link}>
-            <Item>
-              <Box>
-                <motion.svg
-                  width="100%"
-                  height="100%"
-                  initial="normal"
-                  whileHover="hover"
-                >
-                  <motion.rect
-                    variants={boxVariants}
+        {items.map(
+          ({
+            title,
+            link,
+            img,
+          }: {
+            title: string;
+            link: string;
+            img: string;
+          }) => (
+            <Link key={title} href={link}>
+              <Item>
+                <Box bg={img}>
+                  <motion.svg
                     width="100%"
                     height="100%"
-                    fill="#8d8d8d"
-                    stroke="white"
-                    strokeWidth={1}
-                    rx="4"
-                  />
-                  <ForeignObject>
-                    <ProjectName>{title}</ProjectName>
-                  </ForeignObject>
-                </motion.svg>
-              </Box>
-            </Item>
-          </Link>
-        ))}
+                    initial="normal"
+                    whileHover="hover"
+                  >
+                    <motion.rect
+                      variants={boxVariants}
+                      width="100%"
+                      height="100%"
+                      // fill="#8d8d8d"
+                      stroke="white"
+                      strokeWidth={1}
+                      rx="4"
+                    />
+                    <ForeignObject>
+                      <ProjectName>{title}</ProjectName>
+                    </ForeignObject>
+                  </motion.svg>
+                </Box>
+              </Item>
+            </Link>
+          )
+        )}
       </Items>
     </Container>
   );

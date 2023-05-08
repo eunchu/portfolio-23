@@ -9,6 +9,7 @@ import {
   IGetOnAirResult,
   IGetPopularSeriesResult,
   IGetTopRatedSeriesResult,
+  ISeries,
 } from "@/api/interface/seriesApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
@@ -148,9 +149,11 @@ const Series = () => {
   // 배너에 출력할 데이타 선택
   const bannerData = useMemo(() => {
     let data = popularList && popularList[BANNER_SHOW_IDX];
-    if (topRatedList && topRatedList[3].title === "아케인") {
-      data = topRatedList[3];
-    }
+    if (topRatedList)
+      data = topRatedList
+        .filter((item: ISeries) => item.title === "더 라스트 오브 어스")
+        .shift();
+
     return data;
   }, [popularList, topRatedList]);
 

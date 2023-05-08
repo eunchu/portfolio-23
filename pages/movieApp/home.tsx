@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import { useRecoilValue } from "recoil";
-import Youtube, { YouTubeProps } from "react-youtube";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -148,8 +147,6 @@ export default function Home() {
     else document.body.style.overflow = "auto";
   }, [clickedMovie]);
 
-  // const onClickPlay = () => setActivePlayId(playdata?.results[0].key);
-
   return (
     <Main>
       {isLoading ? (
@@ -177,19 +174,8 @@ export default function Home() {
               </Overview>
               <ButtonIcon
                 text="재생"
-                // onClick={onClickPlay}
                 icon={<FontAwesomeIcon icon={faPlay} color="#000000" />}
               />
-              {/* {activePlayId ? (
-                <Youtube
-                  videoId={activePlayId}
-                  opts={{
-                    playerVars: {
-                      autoplay: 1,
-                    },
-                  }}
-                />
-              ) : null} */}
             </BannerContents>
           </Banner>
           <ListBox>
