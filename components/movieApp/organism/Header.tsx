@@ -145,7 +145,8 @@ const Header = () => {
   setFocus("keyword", { shouldSelect: true });
   const onValid = (data: IForm) => {
     router.push({
-      pathname: `/movieApp/search/[keyword]`,
+      // pathname: `/movieApp/search/[keyword]`,
+      pathname: `/movieApp/search/${data.keyword}`,
       query: { keyword: data.keyword },
     });
   };
