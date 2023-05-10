@@ -11,7 +11,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  font-size: 2vw;
+  font-size: 26px;
   margin-bottom: 14px;
 `;
 const Items = styled.ul`
@@ -47,7 +47,6 @@ const Box = styled(motion.div)<{ bg: string }>`
   background-position: top center;
   background-size: cover;
 
-  /* background-color: #8d8d8d; */
   border-radius: 4px;
 
   cursor: pointer;
@@ -63,7 +62,7 @@ const ProjectName = styled.div`
   align-items: center;
   justify-content: center;
 
-  font-size: 1.8vw;
+  font-size: 16px;
   color: white;
 `;
 

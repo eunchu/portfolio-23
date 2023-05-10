@@ -85,6 +85,7 @@ const Input = styled(motion.input)`
 
   background-color: #1a1a1ad9;
   border: 1px solid white;
+  border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
   color: white;
@@ -145,7 +146,6 @@ const Header = () => {
   setFocus("keyword", { shouldSelect: true });
   const onValid = (data: IForm) => {
     router.push({
-      // pathname: `/movieApp/search/[keyword]`,
       pathname: `/movieApp/search/${data.keyword}`,
       query: { keyword: data.keyword },
     });
