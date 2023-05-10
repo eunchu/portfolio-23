@@ -20,6 +20,7 @@ const Nav = styled(motion.nav)`
   z-index: 80;
 `;
 const Logo = styled.h1`
+  font-family: "Orbitron";
   font-size: 18px;
   font-weight: 900;
 

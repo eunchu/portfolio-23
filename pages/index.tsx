@@ -11,6 +11,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
+  font-family: "Orbitron";
   font-size: 26px;
   margin-bottom: 14px;
 `;
