@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import Router from "next/router";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 import NProgress from "nprogress";
@@ -14,7 +16,6 @@ import { theme } from "@/styles/theme";
 
 import "./css/select.css";
 import "nprogress/nprogress.css";
-import { useEffect } from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient({
@@ -50,6 +51,9 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
           <GlobalStyle />
         </ThemeProvider>
+        {!!(process.env.NODE_ENV === "development") && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
       </QueryClientProvider>
     </RecoilRoot>
   );

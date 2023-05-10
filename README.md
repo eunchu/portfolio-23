@@ -25,6 +25,8 @@
 
 - "The Movie Database" 에서 제공하는 api를 이용해서 제작되었습니다
 
+- 반응형으로 제작되었습니다
+
 ## Page
 
 - Movie, Series 페이지로 구성
