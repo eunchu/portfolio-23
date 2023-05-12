@@ -1,10 +1,11 @@
-<div align="center">
-<font size="8">Movie APP</font>
-</div>
+# Movie APP
 
 <p align="center">
   <img src="./public/imgs/readme/main.png">
 </p>
+
+## 💻 Stack
+
 <div align="center">
 <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white">
 <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
