@@ -19,6 +19,7 @@ import { theme } from "@/styles/theme";
 import "./css/select.css";
 import "./css/popover.css";
 import "./css/input.css";
+import "./css/notification.css";
 import "nprogress/nprogress.css";
 
 export default function App({

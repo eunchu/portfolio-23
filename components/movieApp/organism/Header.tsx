@@ -5,7 +5,11 @@ import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useSession, signOut } from "next-auth/react";
-import { Popover } from "antd";
+import { Popover, notification } from "antd";
+
+notification.config({
+  maxCount: 1,
+});
 
 const Nav = styled(motion.nav)`
   position: fixed;
@@ -147,6 +151,7 @@ const UserMenu = styled.li`
   cursor: pointer;
   &:hover {
     background-color: #525252;
+    color: #ffffff;
   }
 `;
 // commons
@@ -157,6 +162,7 @@ const Col = styled.div`
 
 const Header = () => {
   const { data: session } = useSession();
+  const [api, contextHolder] = notification.useNotification();
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
 
   const router = useRouter();
@@ -207,6 +213,14 @@ const Header = () => {
   // NOTE 유저 메뉴
   const userNameFirst = session?.user.userId.slice(0, 1);
   const userMenu = useMemo(() => {
+    const handleNotification = () => {
+      api.info({
+        message: "준비중입니다 🔨",
+        placement: "bottomRight",
+        description: "sdklfjsldkfjsldkfjsdlkfj",
+        duration: 90000,
+      });
+    };
     return (
       <UserMenuContainer>
         <UserInfo>
@@ -214,16 +228,17 @@ const Header = () => {
           <UserName>{session?.user.userId}</UserName>
         </UserInfo>
         <UserMenuBox>
-          <UserMenu>MY</UserMenu>
-          <UserMenu>이용권</UserMenu>
-          <UserMenu>고객센터</UserMenu>
+          {/* <Link href={"/movieApp/myPage"}> */}
+          <UserMenu onClick={handleNotification}>MY</UserMenu>
+          {/* </Link> */}
+          <UserMenu onClick={handleNotification}>고객센터</UserMenu>
           <UserMenu onClick={() => signOut({ callbackUrl: "/movieApp/login" })}>
             로그아웃
           </UserMenu>
         </UserMenuBox>
       </UserMenuContainer>
     );
-  }, [session?.user.userId, userNameFirst]);
+  }, [api, session?.user.userId, userNameFirst]);
 
   return (
     <Nav variants={navVariants} initial={"top"} animate={navAnimation}>
@@ -283,6 +298,7 @@ const Header = () => {
           </Popover>
         ) : null}
       </Col>
+      {contextHolder}
     </Nav>
   );
 };

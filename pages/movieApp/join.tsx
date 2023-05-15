@@ -1,11 +1,12 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import { Input } from "antd";
+import { useEffect } from "react";
+import { Input, notification } from "antd";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "react-query";
 import Head from "next/head";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useRouter } from "next/router";
 
 import { usersAPIs } from "@/api";
 import { useIsMobile } from "@/hooks";
@@ -39,6 +40,7 @@ const DescMessage = styled.p<{ isError: boolean }>`
 `;
 
 const Join = () => {
+  const router = useRouter();
   const isMobileSize = useIsMobile();
 
   const inputWidth = isMobileSize ? "100%" : "400px";
@@ -66,6 +68,8 @@ const Join = () => {
     control,
     handleSubmit,
     setFocus,
+    watch,
+    resetField,
     formState: { errors },
   } = useForm<IUser>({ resolver: yupResolver(yupSchema) });
 
@@ -74,15 +78,30 @@ const Join = () => {
     setFocus("userId", { shouldSelect: true });
   }, [setFocus]);
 
+  const [api, contextHolder] = notification.useNotification();
+
   // NOTE POST] 유저 생성
   const createUser = async (user: IUser) => usersAPIs.createUser(user);
   const { mutate: userMutate } = useMutation(createUser, {
     onMutate: (variables) => console.log("onMutate", variables),
-    onError: (error) => console.log("err", error),
-    onSuccess: (data, variables, context) => {
-      // 성공 alert
-      // 로그인페이지로 이동
-      console.log("onSuccess", data, variables, context), alert("success");
+    onError: (error: any) => {
+      // 아이디값이 중복일 경우
+      api.error({
+        message: "회원가입에 실패하였습니다",
+        description: error.response.data.message,
+        placement: "bottomRight",
+      });
+      resetField("userId");
+      setFocus("userId", { shouldSelect: true });
+    },
+    onSuccess: (data, variables) => {
+      api.success({
+        message: data.message,
+        description: `환영합니다 ${variables.userId}님!
+          로그인 페이지로 이동됩니다`,
+        placement: "bottomRight",
+      });
+      setTimeout(() => router.push("/movieApp/login"), 3000);
     },
   });
 
@@ -156,8 +175,16 @@ const Join = () => {
             width={inputWidth}
             height={inputHeight}
             margin="10px 0 0 0"
-            disable={!Object.keys(errors).length ? false : true}
+            disable={
+              !Object.keys(errors).length &&
+              watch("userId") &&
+              watch("password") &&
+              watch("passwordCheck")
+                ? false
+                : true
+            }
           />
+          {contextHolder}
         </Form>
       </Container>
     </LayoutUnauth>

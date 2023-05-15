@@ -1,0 +1,18 @@
+.ant-notification-notice {
+  background: #cacaca;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  padding: 12px;
+}
+.ant-notification-notice-message {
+  margin-bottom: 0 !important;
+}
+.ant-notification-notice-description {
+  margin-top: 10px;
+}
+.ant-notification-notice-close {
+  top: 12px !important;
+}
