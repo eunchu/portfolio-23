@@ -6,6 +6,8 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
 import NProgress from "nprogress";
+import { SessionProvider } from "next-auth/react";
+import Head from "next/head";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -15,9 +17,14 @@ import GlobalStyle from "@/styles/globals";
 import { theme } from "@/styles/theme";
 
 import "./css/select.css";
+import "./css/popover.css";
+import "./css/input.css";
 import "nprogress/nprogress.css";
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -45,16 +52,21 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
-          <GlobalStyle />
-        </ThemeProvider>
-        {!!(process.env.NODE_ENV === "development") && (
-          <ReactQueryDevtools initialIsOpen={false} />
-        )}
-      </QueryClientProvider>
-    </RecoilRoot>
+    <SessionProvider session={session}>
+      <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <Head>
+              <title>Movie App</title>
+            </Head>
+            <Component {...pageProps} />
+            <GlobalStyle />
+          </ThemeProvider>
+          {!!(process.env.NODE_ENV === "development") && (
+            <ReactQueryDevtools initialIsOpen={false} />
+          )}
+        </QueryClientProvider>
+      </RecoilRoot>
+    </SessionProvider>
   );
 }

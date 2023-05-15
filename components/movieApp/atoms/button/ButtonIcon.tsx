@@ -34,7 +34,13 @@ interface IButtonIconProps {
   icon: React.ReactNode;
   onClick?: any;
 }
-const ButtonIcon = ({ width, size, text, icon, onClick }: IButtonIconProps) => {
+export const ButtonIcon = ({
+  width,
+  size,
+  text,
+  icon,
+  onClick,
+}: IButtonIconProps) => {
   return (
     <Button width={width ?? "75px"} onClick={onClick}>
       <Icon>{icon}</Icon>
@@ -42,5 +48,3 @@ const ButtonIcon = ({ width, size, text, icon, onClick }: IButtonIconProps) => {
     </Button>
   );
 };
-
-export default ButtonIcon;

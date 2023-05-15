@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { useSession, signOut } from "next-auth/react";
+import { Popover } from "antd";
 
 const Nav = styled(motion.nav)`
   position: fixed;
@@ -63,7 +65,7 @@ const Line = styled(motion.span)`
 
   background-color: white;
 `;
-const Search = styled.form`
+const Search = styled.form<{ session: boolean }>`
   position: relative;
 
   display: flex;
@@ -73,6 +75,7 @@ const Search = styled.form`
   svg {
     height: 25px;
   }
+  margin-right: ${(props) => (props.session ? "10px" : "0")};
   cursor: pointer;
 `;
 const Input = styled(motion.input)`
@@ -98,6 +101,54 @@ const Input = styled(motion.input)`
     color: #ababab;
   }
 `;
+const ProfileImage = styled.div`
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #dddddd;
+  color: #111111;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+
+  cursor: pointer;
+`;
+const UserMenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 160px;
+
+  color: #ffffff;
+  padding: 12px 0;
+`;
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid #6b6b6b;
+
+  padding: 0 12px 10px 12px;
+  margin-bottom: 10px;
+`;
+const UserName = styled.div`
+  margin-left: 10px;
+`;
+const UserMenuBox = styled.ul``;
+const UserMenu = styled.li`
+  text-indent: 12px;
+  margin: 4px 0;
+  padding: 4px 0;
+
+  cursor: pointer;
+  &:hover {
+    background-color: #525252;
+  }
+`;
 // commons
 const Col = styled.div`
   display: flex;
@@ -105,6 +156,7 @@ const Col = styled.div`
 `;
 
 const Header = () => {
+  const { data: session } = useSession();
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
 
   const router = useRouter();
@@ -152,6 +204,27 @@ const Header = () => {
     });
   };
 
+  // NOTE 유저 메뉴
+  const userNameFirst = session?.user.userId.slice(0, 1);
+  const userMenu = useMemo(() => {
+    return (
+      <UserMenuContainer>
+        <UserInfo>
+          <ProfileImage>{userNameFirst}</ProfileImage>
+          <UserName>{session?.user.userId}</UserName>
+        </UserInfo>
+        <UserMenuBox>
+          <UserMenu>MY</UserMenu>
+          <UserMenu>이용권</UserMenu>
+          <UserMenu>고객센터</UserMenu>
+          <UserMenu onClick={() => signOut({ callbackUrl: "/movieApp/login" })}>
+            로그아웃
+          </UserMenu>
+        </UserMenuBox>
+      </UserMenuContainer>
+    );
+  }, [session?.user.userId, userNameFirst]);
+
   return (
     <Nav variants={navVariants} initial={"top"} animate={navAnimation}>
       <Col>
@@ -178,7 +251,10 @@ const Header = () => {
         </Items>
       </Col>
       <Col>
-        <Search onSubmit={handleSubmit(onValid)}>
+        <Search
+          onSubmit={handleSubmit(onValid)}
+          session={session ? true : false}
+        >
           <motion.svg
             onClick={onToggleSearch}
             animate={{ x: searchOpen ? -180 : 0 }}
@@ -201,6 +277,11 @@ const Header = () => {
             placeholder="Search for movie or tv series"
           />
         </Search>
+        {session ? (
+          <Popover placement="bottomRight" content={userMenu} arrow={false}>
+            <ProfileImage>{userNameFirst}</ProfileImage>
+          </Popover>
+        ) : null}
       </Col>
     </Nav>
   );

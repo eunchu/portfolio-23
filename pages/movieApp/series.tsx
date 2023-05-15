@@ -20,7 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 import Layout from "@/components/movieApp/template/Layout";
-import ButtonIcon from "@/components/movieApp/atoms/ButtonIcon";
+import { ButtonIcon } from "@/components/movieApp/atoms/button";
 import Slider from "@/components/movieApp/organism/Slider";
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
 

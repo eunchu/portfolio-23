@@ -23,7 +23,7 @@ import {
 import { useIsMobile } from "@/hooks";
 import { commonAtom } from "@/store";
 import { ISearchedResult } from "@/api/interface/searchApi";
-import ButtonIcon from "./atoms/ButtonIcon";
+import { ButtonIcon } from "./atoms/button";
 import {
   IGetSeasonesResult,
   IGetSeriesDetail,

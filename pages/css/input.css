@@ -1,0 +1,23 @@
+.ant-input {
+  font-size: 14px;
+  background-color: #303030;
+  color: #ffffff;
+  border: 0;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+}
+.ant-input::placeholder {
+  font-size: 14px;
+  color: #6e6e6e;
+}
+.ant-input-password {
+  background-color: #303030;
+  border: 0;
+  border-radius: 4px;
+}
+.anticon.ant-input-password-icon {
+  color: #cbcbcb !important;
+}

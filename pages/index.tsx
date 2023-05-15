@@ -93,7 +93,7 @@ const Home = () => {
   const items = [
     {
       title: "Movie App",
-      link: "/movieApp",
+      link: "/movieApp/login",
       img: "https://image.tmdb.org/t/p/original//h8gHn0OzBoaefsYseUByqsmEDMY.jpg",
     },
   ];

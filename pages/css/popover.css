@@ -1,0 +1,14 @@
+.ant-popover-content {
+  margin-top: 10px;
+}
+.ant-popover-inner {
+  background-color: #3a3a3a !important;
+  border: 1px solid rgb(83, 83, 83);
+  border-radius: 4px !important;
+  -webkit-border-radius: 4px !important;
+  -moz-border-radius: 4px !important;
+  -ms-border-radius: 4px !important;
+  -o-border-radius: 4px !important;
+
+  padding: 0 !important;
+}

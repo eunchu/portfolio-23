@@ -18,7 +18,7 @@ import { useIsMobile } from "@/hooks";
 import { commonAtom } from "@/store";
 
 import MovieDetailPopup from "@/components/movieApp/MovieDetailPopup";
-import ButtonIcon from "@/components/movieApp/atoms/ButtonIcon";
+import { ButtonIcon } from "@/components/movieApp/atoms/button";
 import Slider from "@/components/movieApp/organism/Slider";
 
 const BANNER_SHOW_IDX = 0;
@@ -107,7 +107,6 @@ export default function Home() {
   const isMobileSize = useIsMobile();
 
   const clickedId = useRecoilValue(commonAtom);
-  // const [activePlayId, setActivePlayId] = useState<string | null>(null);
 
   // NOTE GET 최근 영화 목록
   const { data, isLoading } = useQuery<IGetNowMoviesResult>(

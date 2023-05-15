@@ -106,13 +106,9 @@ const Slider = ({ type, title, list, offset }: ISliderProps) => {
       x: 0,
     },
     nextMove: (click: string) => ({
-      // x: -(rowRef.current?.offsetWidth / offset + 5) * index,
       x: -rowRef.current?.offsetWidth * index,
     }),
     prevMove: (clickLeft: string) => ({
-      // x:
-      //   -(rowRef.current?.offsetWidth / offset + 5) * index -
-      //   (rowRef.current?.offsetWidth / offset + 5),
       x: -rowRef.current?.offsetWidth * index - rowRef.current?.offsetWidth,
     }),
   };
