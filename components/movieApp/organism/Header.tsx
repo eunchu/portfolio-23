@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, getSession } from "next-auth/react";
 import { Popover, notification } from "antd";
 
 notification.config({
@@ -217,8 +217,6 @@ const Header = () => {
       api.info({
         message: "준비중입니다 🔨",
         placement: "bottomRight",
-        description: "sdklfjsldkfjsldkfjsdlkfj",
-        duration: 90000,
       });
     };
     return (

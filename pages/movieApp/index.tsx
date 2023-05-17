@@ -8,7 +8,9 @@ import Home from "./home";
 const NetflixApp = () => {
   const router = useRouter();
 
-  const { status } = useSession();
+  const { data, status } = useSession();
+
+  console.log("ㅜㅜ", data, status);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/movieApp/login");

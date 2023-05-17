@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
-import { Input } from "antd";
+import { Input, notification } from "antd";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -74,6 +74,7 @@ const Join = styled.span`
 const Login = () => {
   const router = useRouter();
   const isMobileSize = useIsMobile();
+  const [api, contextHolder] = notification.useNotification();
 
   const inputWidth = isMobileSize ? "100%" : "400px";
   const inputHeight = "60px";
@@ -98,7 +99,13 @@ const Login = () => {
           userId: user.userId,
           password: user.password,
         });
-        if (result?.error) return result.error;
+        // authorize()에서 날린 throw new Error('')가 result.error로 들어옴
+        if (result?.error) {
+          return api.error({
+            message: result.error,
+            placement: "bottomRight",
+          });
+        }
         router.push("/movieApp");
       } catch (error) {
         console.log("login error", error);
@@ -161,6 +168,7 @@ const Login = () => {
           </Link>
         </GoJoin>
       </Container>
+      {contextHolder}
     </LayoutUnauth>
   );
 };
