@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { useSession, signOut } from "next-auth/react";
 import { Popover, notification } from "antd";
 import { useQuery } from "react-query";
-import { usersAPIs } from "@/api";
+import { usersAPIs } from "@/apis";
 
 notification.config({
   maxCount: 1,

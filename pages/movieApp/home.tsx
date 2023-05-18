@@ -7,12 +7,12 @@ import { useRecoilValue } from "recoil";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
-import { movieAPIs } from "@/api";
+import { movieAPIs } from "@/apis";
 import {
   IGetNowMoviesResult,
   IGetPopularMovies,
   IGetTopRatedMovies,
-} from "@/api/interface/movieApi";
+} from "@/apis/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
 import { commonAtom } from "@/store";

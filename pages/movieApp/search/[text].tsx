@@ -5,8 +5,8 @@ import { useQuery } from "react-query";
 import { AnimatePresence } from "framer-motion";
 import { useRecoilValue } from "recoil";
 
-import { searchAPIs } from "@/api";
-import { ISearchedResult, ISearchedResults } from "@/api/interface/searchApi";
+import { searchAPIs } from "@/apis";
+import { ISearchedResult, ISearchedResults } from "@/apis/interface/searchApi";
 import { commonAtom } from "@/store";
 import { useIsMobile } from "@/hooks";
 

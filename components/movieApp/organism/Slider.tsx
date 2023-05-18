@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
-import { IMovie } from "@/api/interface/movieApi";
-import { ISearchedResult } from "@/api/interface/searchApi";
+import { IMovie } from "@/apis/interface/movieApi";
+import { ISearchedResult } from "@/apis/interface/searchApi";
 import { useIsMobile } from "@/hooks";
 
 import Box from "./Box";

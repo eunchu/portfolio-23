@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useRouter } from "next/router";
 
-import { usersAPIs } from "@/api";
+import { usersAPIs } from "@/apis";
 import { useIsMobile } from "@/hooks";
 import { Button } from "@/components/movieApp/atoms/button";
 import LayoutUnauth from "@/components/movieApp/template/LayoutUnauth";

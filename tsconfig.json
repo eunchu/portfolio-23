@@ -5,7 +5,7 @@
       "@/*": ["./*"],
       "@/components/*": ["components/*"],
       "@/styles/*": ["styles/*"],
-      "@/api/*": ["api/*"],
+      "@/api/*": ["apis/*"],
       "@/utils/*": ["utils/*"],
       "@/config/*": ["config/*"],
       "@/public/*": ["public/*"]

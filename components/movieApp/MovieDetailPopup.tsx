@@ -14,22 +14,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { makeHourFormat, makeMovieImagePath } from "@/utils";
-import { movieAPIs, seriesAPIs } from "@/api";
+import { movieAPIs, seriesAPIs } from "@/apis";
 import {
   IGetMovie,
   IGetSimilarMoviesResult,
   IMovie,
-} from "@/api/interface/movieApi";
+} from "@/apis/interface/movieApi";
 import { useIsMobile } from "@/hooks";
 import { commonAtom } from "@/store";
-import { ISearchedResult } from "@/api/interface/searchApi";
+import { ISearchedResult } from "@/apis/interface/searchApi";
 import { ButtonIcon } from "./atoms/button";
 import {
   IGetSeasonesResult,
   IGetSeriesDetail,
   IGetSimilarSeriesResult,
   ISeries,
-} from "@/api/interface/seriesApi";
+} from "@/apis/interface/seriesApi";
 import { makeEncodeSimilarItem } from "@/utils/make-encode-item";
 
 import MovieBox from "@/components/movieApp/MovieBox";

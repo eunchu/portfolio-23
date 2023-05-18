@@ -4,13 +4,13 @@ import { useQuery } from "react-query";
 import { AnimatePresence } from "framer-motion";
 import { useRecoilValue } from "recoil";
 
-import { seriesAPIs } from "@/api";
+import { seriesAPIs } from "@/apis";
 import {
   IGetOnAirResult,
   IGetPopularSeriesResult,
   IGetTopRatedSeriesResult,
   ISeries,
-} from "@/api/interface/seriesApi";
+} from "@/apis/interface/seriesApi";
 import { makeMovieImagePath } from "@/utils";
 import { useIsMobile } from "@/hooks";
 import { makeEncodeSeriesItem } from "@/utils/make-encode-item";

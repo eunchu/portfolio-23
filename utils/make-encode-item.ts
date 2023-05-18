@@ -1,4 +1,4 @@
-import { ISeries, ISimilarSeries } from "@/api/interface/seriesApi";
+import { ISeries, ISimilarSeries } from "@/apis/interface/seriesApi";
 
 export const makeEncodeSeriesItem = (originalList: ISeries[]) =>
   originalList.map((item) => ({

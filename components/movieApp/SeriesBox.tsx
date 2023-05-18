@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { IEpisode } from "@/api/interface/seriesApi";
+import { IEpisode } from "@/apis/interface/seriesApi";
 import { makeMovieImagePath } from "@/utils";
 
 const Container = styled.div`

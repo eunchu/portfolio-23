@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useSetRecoilState } from "recoil";
 
-import { IMovie } from "@/api/interface/movieApi";
+import { IMovie } from "@/apis/interface/movieApi";
 import { makeMovieImagePath } from "@/utils";
 import { commonAtom } from "@/store";
-import { ISearchedResult } from "@/api/interface/searchApi";
+import { ISearchedResult } from "@/apis/interface/searchApi";
 import { useIsMobile } from "@/hooks";
 
 interface IStyle {
