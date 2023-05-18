@@ -7,12 +7,14 @@ export const middleware = async (req: NextRequest) => {
   const session = await getToken({ req, secret, raw: true });
   const { pathname } = req.nextUrl;
 
-  if (!session) NextResponse.redirect(new URL("/movieApp/login", req.url));
-
-  // if (pathname.startsWith("/movieApp/login") && session)
-  //   NextResponse.redirect(new URL("/movieApp", req.url));
+  if (
+    (pathname.includes("/movieApp/login") ||
+      pathname.includes("/movieApp/join")) &&
+    session
+  )
+    return NextResponse.redirect(new URL("/movieApp", req.url));
 };
 
 export const config = {
-  matcher: ["/movieApp/login"],
+  matcher: ["/movieApp/login", "/movieApp/join"],
 };

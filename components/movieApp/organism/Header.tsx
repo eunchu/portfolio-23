@@ -4,8 +4,10 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import { motion, useAnimation, useScroll } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { useSession, signOut, getSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Popover, notification } from "antd";
+import { useQuery } from "react-query";
+import { usersAPIs } from "@/api";
 
 notification.config({
   maxCount: 1,
@@ -209,6 +211,9 @@ const Header = () => {
       query: { keyword: data.keyword },
     });
   };
+
+  const { data: aaaa } = useQuery(["test", "tes"], () => usersAPIs.readUser());
+  console.log("?", aaaa);
 
   // NOTE 유저 메뉴
   const userNameFirst = session?.user.userId.slice(0, 1);

@@ -28,9 +28,12 @@ const Title = styled.h2`
   margin-bottom: 40px;
 `;
 const Form = styled.form`
+  width: 100%;
+
   display: flex;
   flex-direction: column;
 
+  padding: 0 4%;
   gap: 10px;
 `;
 const DescMessage = styled.p<{ isError: boolean }>`

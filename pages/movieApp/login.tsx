@@ -96,6 +96,7 @@ const Login = () => {
         const result = await signIn("credentials", {
           // 로그인 실패 시 새로고침 여부
           redirect: false,
+          id: "sdf",
           userId: user.userId,
           password: user.password,
         });
