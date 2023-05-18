@@ -212,9 +212,6 @@ const Header = () => {
     });
   };
 
-  const { data: aaaa } = useQuery(["test", "tes"], () => usersAPIs.readUser());
-  console.log("?", aaaa);
-
   // NOTE 유저 메뉴
   const userNameFirst = session?.user.userId.slice(0, 1);
   const userMenu = useMemo(() => {
