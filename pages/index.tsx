@@ -125,7 +125,6 @@ const Home = () => {
                       variants={boxVariants}
                       width="100%"
                       height="100%"
-                      // fill="#8d8d8d"
                       stroke="white"
                       strokeWidth={1}
                       rx="4"
