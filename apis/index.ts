@@ -9,7 +9,7 @@ const MOVIE_BASE_PATH = "https://api.themoviedb.org/3";
 const BASE_PATH =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000/api/users"
-    : "https://main--stupendous-frangipane-2563b4.netlify.app/api/users";
+    : "https://eunju-movie-app.netlify.app/api/users";
 
 const movieAPIs = moviesFactory({
   baseUrl: `${MOVIE_BASE_PATH}/movie`,
