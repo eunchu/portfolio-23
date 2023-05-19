@@ -7,8 +7,7 @@
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "netlify-deploy": "netlify-deploy",
-    "vercel-deploy": "next build && next export"
+    "netlify-deploy": "netlify-deploy"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
