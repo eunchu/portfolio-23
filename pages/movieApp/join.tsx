@@ -33,6 +33,7 @@ const Form = styled.form`
 
   display: flex;
   flex-direction: column;
+  align-items: center;
 
   padding: 0 4%;
   gap: 10px;
