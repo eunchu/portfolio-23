@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint",
-    "netlify-deploy": "netlify-deploy"
+    "lint": "next lint"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
@@ -48,6 +47,5 @@
     "typescript": "4.9.5",
     "uuid": "^9.0.0",
     "yup": "^1.1.1"
-  },
-  "homepage": "https://eunchu.github.io/portfolio-23"
+  }
 }
