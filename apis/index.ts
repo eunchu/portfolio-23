@@ -1,3 +1,4 @@
+import axios from "axios";
 import { moviesFactory } from "./movieApi";
 import { searchFactory } from "./searchApi";
 import { seriesFactory } from "./seriesApi";
@@ -8,8 +9,10 @@ const COMMON_QUERY = `api_key=${API_KEY}&language=ko-KR&region=KR`;
 const MOVIE_BASE_PATH = "https://api.themoviedb.org/3";
 const BASE_PATH =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:3000/api/users"
-    : "https://eunju-movie-app.netlify.app/api/users";
+    ? "http://localhost:3000"
+    : "https://eunju-movie-app.netlify.app";
+
+export const userClient = axios.create({ baseURL: `${BASE_PATH}/api/users` });
 
 const movieAPIs = moviesFactory({
   baseUrl: `${MOVIE_BASE_PATH}/movie`,
@@ -23,8 +26,6 @@ const seriesAPIs = seriesFactory({
   baseUrl: `${MOVIE_BASE_PATH}/tv`,
   fixedQuery: COMMON_QUERY,
 });
-const usersAPIs = usersFactory({
-  baseUrl: BASE_PATH,
-});
+const usersAPIs = usersFactory();
 
 export { movieAPIs, searchAPIs, seriesAPIs, usersAPIs };

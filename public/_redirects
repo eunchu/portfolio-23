@@ -1,0 +1,1 @@
+/api/* http://eunju-movie-app.netlify.app/:splat 200
