@@ -17,13 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
     if (duplicateUser) {
-      res
-        .status(400)
-        .json({
-          ok: false,
-          code: "duplicate-id",
-          message: "이미 사용중인 아이디 입니다",
-        });
+      res.status(400).json({
+        ok: false,
+        code: "duplicate-id",
+        message: "이미 사용중인 아이디 입니다",
+      });
     }
 
     await client.user.create({
