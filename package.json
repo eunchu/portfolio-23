@@ -29,6 +29,7 @@
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
     "framer-motion": "^10.0.1",
+    "mongodb": "^5.5.0",
     "next": "13.2.3",
     "next-auth": "^4.22.1",
     "nprogress": "^0.2.0",

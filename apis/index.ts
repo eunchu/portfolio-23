@@ -10,7 +10,7 @@ const MOVIE_BASE_PATH = "https://api.themoviedb.org/3";
 const BASE_PATH =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : "https://eunju-movie-app.netlify.app";
+    : "https://portfolio-eunchu.vercel.app/";
 
 export const userClient = axios.create({ baseURL: `${BASE_PATH}/api/users` });
 
